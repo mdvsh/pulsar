@@ -11,8 +11,8 @@ int main() {
     APP_PROFILE_BEGIN_SESSION_WITH_FILE("App", "profile.json");
 
     {
-      APP_PROFILE_SCOPE("Test scope");
-      App::Application app{"App"};
+      APP_PROFILE_SCOPE("Pulsar scope");
+      App::Application app{"Pulsar"};
       app.run();
     }
 

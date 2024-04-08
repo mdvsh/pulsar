@@ -4,13 +4,16 @@ Having all [requirements](README.md#requirements) set, here you can find how to 
 
 ## Table of contents
 
-- [Build](#build)
-- [Execute](#execute)
-  - [macOS](#macos)
-  - [Windows](#windows)
-  - [Linux](#linux)
-- [Distribution](#distribution)
-- [Tests](#tests)
+- [Quick Start](#quick-start)
+  - [Table of contents](#table-of-contents)
+  - [Build](#build)
+  - [Execute](#execute)
+    - [macOS](#macos)
+    - [Windows](#windows)
+    - [Linux](#linux)
+  - [Distribution](#distribution)
+  - [Tests](#tests)
+  - [Preview](#preview)
 
 ## Build
 

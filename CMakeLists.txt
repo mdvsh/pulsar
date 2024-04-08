@@ -3,13 +3,13 @@ cmake_minimum_required(VERSION 3.22)
 include(cmake/UniversalAppleBuild.cmake)
 
 project(
-  BasicGuiProjectSetup
-  DESCRIPTION "Base GUI project setup."
+  Pulsar
+  DESCRIPTION "madhav's eecs498 game engine"
   VERSION 1.0.0
   LANGUAGES CXX)
 
-set(PROJECT_COMPANY_NAME "My Company")
-set(PROJECT_COMPANY_NAMESPACE "com.mycompany")  # Reverse domain name notation
+set(PROJECT_COMPANY_NAME "Madhav Shekhar Sharma")
+set(PROJECT_COMPANY_NAMESPACE "com.madhavshekhar")  # Reverse domain name notation
 
 include(cmake/StandardProjectSettings.cmake)
 include(GNUInstallDirs)
