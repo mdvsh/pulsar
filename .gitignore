@@ -14,3 +14,9 @@ profile.json
 
 # User defined CMake preset file.
 CMakeUserPresets.json
+
+cmake-build-debug/
+cmake-build-release/
+
+.idea
+.vscode

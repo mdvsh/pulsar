@@ -1,2 +1,0 @@
-/Users/sharmadhavs/Downloads/winter-24/498/pulsar3/cmake-build-debug/_deps/sdl2-build/CMakeFiles/CheckOBJC/CMakeFiles/edit_cache.dir
-/Users/sharmadhavs/Downloads/winter-24/498/pulsar3/cmake-build-debug/_deps/sdl2-build/CMakeFiles/CheckOBJC/CMakeFiles/rebuild_cache.dir
