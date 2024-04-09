@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/Users/sharmadhavs/Downloads/winter-24/498/pulsar3/cmake-build-debug/_deps/box2d-subbuild/CMakeFiles/box2d-populate"
+		},
+		{
+			"file" : "/Users/sharmadhavs/Downloads/winter-24/498/pulsar3/cmake-build-debug/_deps/box2d-subbuild/CMakeFiles/box2d-populate.rule"
+		},
+		{
+			"file" : "/Users/sharmadhavs/Downloads/winter-24/498/pulsar3/cmake-build-debug/_deps/box2d-subbuild/CMakeFiles/box2d-populate-complete.rule"
+		},
+		{
+			"file" : "/Users/sharmadhavs/Downloads/winter-24/498/pulsar3/cmake-build-debug/_deps/box2d-subbuild/box2d-populate-prefix/src/box2d-populate-stamp/box2d-populate-build.rule"
+		},
+		{
+			"file" : "/Users/sharmadhavs/Downloads/winter-24/498/pulsar3/cmake-build-debug/_deps/box2d-subbuild/box2d-populate-prefix/src/box2d-populate-stamp/box2d-populate-configure.rule"
+		},
+		{
+			"file" : "/Users/sharmadhavs/Downloads/winter-24/498/pulsar3/cmake-build-debug/_deps/box2d-subbuild/box2d-populate-prefix/src/box2d-populate-stamp/box2d-populate-download.rule"
+		},
+		{
+			"file" : "/Users/sharmadhavs/Downloads/winter-24/498/pulsar3/cmake-build-debug/_deps/box2d-subbuild/box2d-populate-prefix/src/box2d-populate-stamp/box2d-populate-install.rule"
+		},
+		{
+			"file" : "/Users/sharmadhavs/Downloads/winter-24/498/pulsar3/cmake-build-debug/_deps/box2d-subbuild/box2d-populate-prefix/src/box2d-populate-stamp/box2d-populate-mkdir.rule"
+		},
+		{
+			"file" : "/Users/sharmadhavs/Downloads/winter-24/498/pulsar3/cmake-build-debug/_deps/box2d-subbuild/box2d-populate-prefix/src/box2d-populate-stamp/box2d-populate-patch.rule"
+		},
+		{
+			"file" : "/Users/sharmadhavs/Downloads/winter-24/498/pulsar3/cmake-build-debug/_deps/box2d-subbuild/box2d-populate-prefix/src/box2d-populate-stamp/box2d-populate-test.rule"
+		},
+		{
+			"file" : "/Users/sharmadhavs/Downloads/winter-24/498/pulsar3/cmake-build-debug/_deps/box2d-subbuild/box2d-populate-prefix/src/box2d-populate-stamp/box2d-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"box2d-populate"
+		],
+		"name" : "box2d-populate"
+	}
+}

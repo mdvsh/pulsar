@@ -1,0 +1,490 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						10
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "packaging",
+					"jsonFile" : "directory-packaging-Debug-ff77023bacb79ceeabe0.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "packaging"
+				},
+				{
+					"build" : "vendor",
+					"childIndexes" : 
+					[
+						3,
+						4,
+						5,
+						6,
+						7,
+						8
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-vendor-Debug-650fd368ad88650ee272.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "vendor"
+				},
+				{
+					"build" : "vendor/imgui-setup",
+					"jsonFile" : "directory-vendor.imgui-setup-Debug-ddf5c64bebed4e6520ac.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 0,
+					"source" : "vendor/imgui-setup",
+					"targetIndexes" : 
+					[
+						11
+					]
+				},
+				{
+					"build" : "_deps/doctest-build",
+					"jsonFile" : "directory-_deps.doctest-build-Debug-d6e5490fe4db7512bc37.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 1,
+					"source" : "cmake-build-debug/_deps/doctest-src",
+					"targetIndexes" : 
+					[
+						9
+					]
+				},
+				{
+					"build" : "_deps/fmt-build",
+					"jsonFile" : "directory-_deps.fmt-build-Debug-c263544cc6a3d8503699.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 2,
+					"source" : "cmake-build-debug/_deps/fmt-src",
+					"targetIndexes" : 
+					[
+						10
+					]
+				},
+				{
+					"build" : "_deps/sdl2-build",
+					"jsonFile" : "directory-_deps.sdl2-build-Debug-e842b0519bd60c12d7ef.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 3,
+					"source" : "cmake-build-debug/_deps/sdl2-src",
+					"targetIndexes" : 
+					[
+						3,
+						4,
+						5,
+						12,
+						14
+					]
+				},
+				{
+					"build" : "_deps/spdlog-build",
+					"jsonFile" : "directory-_deps.spdlog-build-Debug-7630642c96cc99218350.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 4,
+					"source" : "cmake-build-debug/_deps/spdlog-src",
+					"targetIndexes" : 
+					[
+						13
+					]
+				},
+				{
+					"build" : "_deps/box2d-build",
+					"childIndexes" : 
+					[
+						9
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-_deps.box2d-build-Debug-b0d48f70293a24e69cc0.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 5,
+					"source" : "cmake-build-debug/_deps/box2d-src"
+				},
+				{
+					"build" : "_deps/box2d-build/src",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-_deps.box2d-build.src-Debug-3b1ec8bd300faeaccea1.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 8,
+					"projectIndex" : 5,
+					"source" : "cmake-build-debug/_deps/box2d-src/src",
+					"targetIndexes" : 
+					[
+						8
+					]
+				},
+				{
+					"build" : "src",
+					"childIndexes" : 
+					[
+						11,
+						12,
+						13,
+						15
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-src-Debug-b6cf2213fc5053b67c22.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src"
+				},
+				{
+					"build" : "src/tests",
+					"jsonFile" : "directory-src.tests-Debug-115a8c61f2ecd2030e99.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 10,
+					"projectIndex" : 0,
+					"source" : "src/tests",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"build" : "src/app",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-src.app-Debug-fbc9734db4ba3e123cc4.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 10,
+					"projectIndex" : 0,
+					"source" : "src/app",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "src/engine",
+					"childIndexes" : 
+					[
+						14
+					],
+					"jsonFile" : "directory-src.engine-Debug-f18d3e3eac6b44c09f1e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 10,
+					"projectIndex" : 0,
+					"source" : "src/engine",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "src/engine/Tests",
+					"jsonFile" : "directory-src.engine.Tests-Debug-6e63f94f85f1560f696b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 13,
+					"projectIndex" : 0,
+					"source" : "src/engine/Tests",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "src/settings",
+					"jsonFile" : "directory-src.settings-Debug-d686f8452699a83ea06e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 10,
+					"projectIndex" : 0,
+					"source" : "src/settings",
+					"targetIndexes" : 
+					[
+						6
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4,
+						5
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15
+					],
+					"name" : "Pulsar",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						6,
+						7,
+						11
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						4
+					],
+					"name" : "doctest",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						9
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5
+					],
+					"name" : "FMT",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						10
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						6
+					],
+					"name" : "SDL2",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						3,
+						4,
+						5,
+						12,
+						14
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						7
+					],
+					"name" : "spdlog",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						13
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						8,
+						9
+					],
+					"name" : "box2d",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						8
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 12,
+					"id" : "App::@ff93792cf40911dae1b8",
+					"jsonFile" : "target-App-Debug-d213e854b1f19b9445cf.json",
+					"name" : "App",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 13,
+					"id" : "Core::@d30147da1c6e0503853c",
+					"jsonFile" : "target-Core-Debug-179b527049642bb50cbc.json",
+					"name" : "Core",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 14,
+					"id" : "ResourcesTest::@2467b37a29955294de0a",
+					"jsonFile" : "target-ResourcesTest-Debug-1c61ec5061795d68e5f4.json",
+					"name" : "ResourcesTest",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "SDL2::@45bd952f1071c035638d",
+					"jsonFile" : "target-SDL2-Debug-3a000e59f22bca5cc646.json",
+					"name" : "SDL2",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "SDL2-static::@45bd952f1071c035638d",
+					"jsonFile" : "target-SDL2-static-Debug-5583cb26ea7b2b840de2.json",
+					"name" : "SDL2-static",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "SDL2_test::@45bd952f1071c035638d",
+					"jsonFile" : "target-SDL2_test-Debug-ca95e6cc4d0573ca4511.json",
+					"name" : "SDL2_test",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 15,
+					"id" : "Settings::@4a89bb85a6902de6040e",
+					"jsonFile" : "target-Settings-Debug-aaacb8674125da105687.json",
+					"name" : "Settings",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 11,
+					"id" : "TestRunner::@08b4cb1648a15a99be29",
+					"jsonFile" : "target-TestRunner-Debug-a8f286193e0508eba567.json",
+					"name" : "TestRunner",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "box2d::@20f5237e34ad7ded9806",
+					"jsonFile" : "target-box2d-Debug-df32be394c383ca7e8a7.json",
+					"name" : "box2d",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "doctest_with_main::@de8c2d1415f8a28c2e63",
+					"jsonFile" : "target-doctest_with_main-Debug-d4343fe63e382ee74378.json",
+					"name" : "doctest_with_main",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "fmt::@976f4f0bee90b99ecdb6",
+					"jsonFile" : "target-fmt-Debug-226c3c9d76ddf4736c3b.json",
+					"name" : "fmt",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "imgui::@a8c45d94d3934b73d9dc",
+					"jsonFile" : "target-imgui-Debug-f9bb3f32fdb2a9ec8ae1.json",
+					"name" : "imgui",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "sdl_headers_copy::@45bd952f1071c035638d",
+					"jsonFile" : "target-sdl_headers_copy-Debug-ce31a19dff18ca7e06dc.json",
+					"name" : "sdl_headers_copy",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "spdlog::@eb35cfce7893ccfeff1e",
+					"jsonFile" : "target-spdlog-Debug-44a515c96d499142c6f7.json",
+					"name" : "spdlog",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "uninstall::@45bd952f1071c035638d",
+					"jsonFile" : "target-uninstall-Debug-92679dadfd9ed32f310f.json",
+					"name" : "uninstall",
+					"projectIndex" : 3
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/sharmadhavs/Downloads/winter-24/498/pulsar3/cmake-build-debug",
+		"source" : "/Users/sharmadhavs/Downloads/winter-24/498/pulsar3"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}
