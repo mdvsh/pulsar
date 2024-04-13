@@ -111,8 +111,6 @@ class SceneManager {
 
   [[maybe_unused]] void increase_score() { ++score; }
 
-  const std::string HEALTH_DOWN_FLAG = "health down";
-
   // Functions to expose to lua via the Actor namespace
   [[nodiscard]] static luabridge::LuaRef GetActor(const std::string& name);
   [[nodiscard]] static luabridge::LuaRef GetActors(const std::string& name);

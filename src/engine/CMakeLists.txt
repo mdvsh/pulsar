@@ -6,8 +6,8 @@ add_library(${NAME} STATIC
   Core/Log.cpp Core/Log.hpp Core/Debug/Instrumentor.hpp
   Core/Application.cpp Core/Application.hpp Core/Window.cpp Core/Window.hpp
   Core/Resources.hpp Core/DPIHandler.hpp
-        Core/Engine.cpp
-        Core/Engine.h
+        # Core/Engine.cpp
+        # Core/Engine.h
         Core/Renderer.cpp
         Core/Renderer.h
         Core/SceneManager.cpp
@@ -53,7 +53,7 @@ endif ()
 
 target_include_directories(${NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(${NAME} PUBLIC ${CMAKE_SOURCE_DIR}/vendor)
-target_compile_features(${NAME} PRIVATE cxx_std_17)
+target_compile_features(${NAME} PRIVATE cxx_std_20)
 
 find_package(Lua REQUIRED)
 include_directories(${LUA_INCLUDE_DIR})

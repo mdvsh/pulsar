@@ -11,7 +11,9 @@
 #include "Core/DPIHandler.hpp"
 #include "Core/Debug/Instrumentor.hpp"
 #include "Core/Log.hpp"
+#include "Core/Renderer.h"
 #include "Core/Resources.hpp"
+#include "Core/SceneManager.h"
 #include "Core/Window.hpp"
 #include "Settings/Project.hpp"
 
@@ -20,7 +22,8 @@ namespace App {
 Application::Application(const std::string& title) {
   APP_PROFILE_FUNCTION();
 
-  const unsigned int init_flags{SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER};
+  const unsigned int init_flags{SDL_INIT_VIDEO | SDL_INIT_TIMER |
+                                SDL_INIT_GAMECONTROLLER};
   if (SDL_Init(init_flags) != 0) {
     APP_ERROR("Error: %s\n", SDL_GetError());
     m_exit_status = ExitStatus::FAILURE;
@@ -55,10 +58,12 @@ ExitStatus App::Application::run() {
   ImGui::CreateContext();
   ImGuiIO& io{ImGui::GetIO()};
 
-  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable |
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard |
+                    ImGuiConfigFlags_DockingEnable |
                     ImGuiConfigFlags_ViewportsEnable;
 
-  const std::string user_config_path{SDL_GetPrefPath(COMPANY_NAMESPACE.c_str(), APP_NAME.c_str())};
+  const std::string user_config_path{
+      SDL_GetPrefPath(COMPANY_NAMESPACE.c_str(), APP_NAME.c_str())};
   APP_DEBUG("User config path: {}", user_config_path);
 
   // Absolute imgui.ini path to preserve settings independent of app location.
@@ -68,14 +73,16 @@ ExitStatus App::Application::run() {
   // ImGUI font
   const float font_scaling_factor{DPIHandler::get_scale()};
   const float font_size{18.0F * font_scaling_factor};
-  const std::string font_path{Resources::font_path("Manrope.ttf").generic_string()};
+  const std::string font_path{
+      Resources::font_path("Manrope.ttf").generic_string()};
 
   io.Fonts->AddFontFromFileTTF(font_path.c_str(), font_size);
   io.FontDefault = io.Fonts->AddFontFromFileTTF(font_path.c_str(), font_size);
   DPIHandler::set_global_font_scaling(&io);
 
   // Setup Platform/Renderer backends
-  ImGui_ImplSDL2_InitForSDLRenderer(m_window->get_native_window(), m_window->get_native_renderer());
+  ImGui_ImplSDL2_InitForSDLRenderer(m_window->get_native_window(),
+                                    m_window->get_native_renderer());
   ImGui_ImplSDLRenderer2_Init(m_window->get_native_renderer());
 
   m_running = true;
@@ -93,7 +100,8 @@ ExitStatus App::Application::run() {
       }
 
       if (event.type == SDL_WINDOWEVENT &&
-          event.window.windowID == SDL_GetWindowID(m_window->get_native_window())) {
+          event.window.windowID ==
+              SDL_GetWindowID(m_window->get_native_window())) {
         on_event(event.window);
       }
     }
@@ -105,6 +113,9 @@ ExitStatus App::Application::run() {
 
     if (!m_minimized) {
       ImGui::DockSpaceOverViewport();
+      ImGuiID dockspace_id = ImGui::GetID("MainDockSpace");
+      ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f),
+                       ImGuiDockNodeFlags_PassthruCentralNode);
 
       if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File")) {
@@ -114,7 +125,7 @@ ExitStatus App::Application::run() {
           ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("View")) {
-          ImGui::MenuItem("Some Panel", nullptr, &m_show_some_panel);
+          ImGui::MenuItem("Pulsar", nullptr, &m_show_landing_panel);
           ImGui::MenuItem("ImGui Demo Panel", nullptr, &m_show_demo_panel);
           ImGui::MenuItem("Debug Panel", nullptr, &m_show_debug_panel);
           ImGui::EndMenu();
@@ -123,10 +134,29 @@ ExitStatus App::Application::run() {
         ImGui::EndMainMenuBar();
       }
 
-      // Whatever GUI to implement here ...
-      if (m_show_some_panel) {
-        ImGui::Begin("Some panel", &m_show_some_panel);
-        ImGui::Text("Hello World");
+      if (m_show_landing_panel) {
+        ImGui::SetNextWindowDockID(dockspace_id, ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(600, 400), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(),
+                                ImGuiCond_FirstUseEver, ImVec2(0.5f, 0.5f));
+
+        ImGui::Begin("Welcome to Pulsar!", &m_show_landing_panel,
+                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
+
+        ImGui::Text(
+            "Please open an existing project or create a new one to get "
+            "started...");
+        ImGui::Separator();
+
+        if (ImGui::TreeNode("Useful Resources:")) {
+          ImGui::BulletText("Pulsar Documentation");
+          ImGui::Bullet();
+          ImGui::SmallButton("Lua API Reference");
+          ImGui::SameLine();
+          ImGui::Text("Press me for more info.");
+          ImGui::TreePop();
+        }
+
         ImGui::End();
       }
 

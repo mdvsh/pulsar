@@ -15,11 +15,6 @@
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
-// clang-format off
-#include "lua.hpp"
-#include <LuaBridge/LuaBridge.h>
-// clang-format on
-
 #include <box2d/box2d.h>
 
 class EngineUtils {

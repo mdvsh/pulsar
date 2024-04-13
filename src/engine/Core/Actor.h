@@ -22,6 +22,11 @@
 
 #include "EngineUtils.h"
 
+// clang-format off
+#include "lua.hpp"
+#include <LuaBridge/LuaBridge.h>
+// clang-format on
+
 inline size_t g_uuid = 0;
 inline size_t g_component_id = 0;
 

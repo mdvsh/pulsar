@@ -24,17 +24,6 @@ void Engine::load_initial_settings() {
     std::exit(0);
   }
 
-  rapidjson::Document game_config_document;
-  EngineUtils::ReadJsonFile(game_config_path, game_config_document);
-
-  game_state_messages.reserve(3);
-  game_state_messages.push_back(EngineUtils::LoadStringFromJson(
-      game_config_document, "game_start_message"));
-  game_state_messages.push_back(EngineUtils::LoadStringFromJson(
-      game_config_document, "game_over_bad_message"));
-  game_state_messages.push_back(EngineUtils::LoadStringFromJson(
-      game_config_document, "game_over_good_message"));
-
   if (std::filesystem::exists(rendering_config_path)) {
     rapidjson::Document rendering_config_document;
     EngineUtils::ReadJsonFile(rendering_config_path, rendering_config_document);
@@ -55,6 +44,9 @@ void Engine::run_game() {
   const std::string game_config_path = "resources/game.config";
   rapidjson::Document game_config;
   EngineUtils::ReadJsonFile(game_config_path, game_config);
+  
+  Renderer& renderer = Renderer::getInstance();
+  SceneManager& scene_manager = SceneManager::getInstance();
 
   renderer.initialize(game_config);
   CameraManager::initialize();

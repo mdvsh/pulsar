@@ -52,7 +52,8 @@ void EventBus::ProcessPendingUnsubscriptions() {
     if (it != subscription_map.end()) {
       auto& subscribers = it->second;
       auto pred = [&](const event_pair& p) {
-        return p.first == subscriber && p.second == callback;
+        return p.first.tostring() == subscriber.tostring() &&
+               p.second.tostring() == callback.tostring();
       };
       subscribers.erase(
           std::remove_if(subscribers.begin(), subscribers.end(), pred),

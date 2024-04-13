@@ -41,12 +41,6 @@ class Engine {
   const std::string WIN_FLAG = "you win";
   const std::string LOSE_FLAG = "game over";
 
-  const std::string SCENE_CHANGE_FLAG = "proceed to";
-
-  std::vector<std::string> game_state_messages;
-
-  std::vector<Actor*> relevant_actors;
-
   std::unordered_map<std::string, glm::vec2> cardinal_directions_map = {
       {"n", glm::vec2(0, -1)},
       {"e", glm::vec2(1, 0)},
@@ -66,9 +60,6 @@ class Engine {
   }
 
  private:
-  SceneManager& scene_manager = SceneManager::getInstance();
-  Renderer& renderer = Renderer::getInstance();
-
   bool is_game_over = false;
   bool is_game_won = false;
 

@@ -8,6 +8,12 @@
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
 #include <SDL2_ttf/SDL_ttf.h>
+
+// clang-format off
+#include "lua.hpp"
+#include <LuaBridge/LuaBridge.h>
+// clang-format on
+
 #include <rapidjson/document.h>
 #include <unordered_map>
 #include <utility>
