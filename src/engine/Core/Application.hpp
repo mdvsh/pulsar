@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "Core/Window.hpp"
+// #include "Core/Engine.h"
 
 namespace App {
 
@@ -33,6 +34,7 @@ class Application {
  private:
   ExitStatus m_exit_status{ExitStatus::SUCCESS};
   std::unique_ptr<Window> m_window{nullptr};
+  // std::unique_ptr<Engine>(m_engine){nullptr};
 
   bool m_running{true};
   bool m_minimized{false};

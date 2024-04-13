@@ -58,11 +58,11 @@ void Renderer::initialize(const rapidjson::Document& game_config) {
       CAMERA_EASE_FACTOR = rendering_config["cam_ease_factor"].GetFloat();
   }
 
-  const auto g_window = Helper::SDL_CreateWindow498(
+  const auto g_window = SDL_CreateWindow(
       game_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
       WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
 
-  const auto g_renderer = Helper::SDL_CreateRenderer498(
+  const auto g_renderer = SDL_CreateRenderer(
       g_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
   IMG_Init(IMG_INIT_PNG);
@@ -264,7 +264,7 @@ void Renderer::render_scene_image(const IMGRenderRequest& request) const {
   SDL_SetTextureAlphaMod(texture, request.a);
   const SDL_Point pivot = {static_cast<int>(pivot_x),
                            static_cast<int>(pivot_y)};
-  Helper::SDL_RenderCopyEx498(0, "", get_sdl_renderer(), texture, nullptr,
+  SDL_RenderCopyEx(get_sdl_renderer(), texture, nullptr,
                               &render_rect, request.rotation_degrees, &pivot,
                               SDL_FLIP_NONE);
   SDL_RenderSetScale(get_sdl_renderer(), DEFAULT_ZOOM_FACTOR,

@@ -27,6 +27,8 @@ Application::Application(const std::string& title) {
   }
 
   m_window = std::make_unique<Window>(Window::Settings{title});
+  // m_engine = std::make_unique<Engine>();
+  // m_engine->load_initial_settings();
 }
 
 Application::~Application() {
@@ -45,6 +47,8 @@ ExitStatus App::Application::run() {
   if (m_exit_status == ExitStatus::FAILURE) {
     return m_exit_status;
   }
+
+  // Load up
 
   // Setup Dear ImGui context
   IMGUI_CHECKVERSION();
