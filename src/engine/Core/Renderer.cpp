@@ -58,22 +58,22 @@ void Renderer::initialize(const rapidjson::Document& game_config) {
       CAMERA_EASE_FACTOR = rendering_config["cam_ease_factor"].GetFloat();
   }
 
-  const auto game_window = Helper::SDL_CreateWindow498(
+  const auto g_window = Helper::SDL_CreateWindow498(
       game_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
       WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
 
-  const auto sdl_renderer = Helper::SDL_CreateRenderer498(
-      game_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  const auto g_renderer = Helper::SDL_CreateRenderer498(
+      g_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
   IMG_Init(IMG_INIT_PNG);
   TTF_Init();
 
-  SDL_SetRenderDrawColor(sdl_renderer, clear_color_r, clear_color_g,
+  SDL_SetRenderDrawColor(g_renderer, clear_color_r, clear_color_g,
                          clear_color_b, 255);
-  SDL_RenderClear(sdl_renderer);
+  SDL_RenderClear(g_renderer);
 
-  set_sdl_renderer(sdl_renderer);
-  set_game_window(game_window);
+  set_sdl_renderer(g_renderer);
+  set_game_window(g_window);
 }
 
 void Renderer::render_HUD(const int health, const int score) {

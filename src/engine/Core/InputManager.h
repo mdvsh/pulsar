@@ -5,12 +5,11 @@
 #ifndef PULSAR_SRC_ENGINE_CORE_INPUTMANAGER_H_
 #define PULSAR_SRC_ENGINE_CORE_INPUTMANAGER_H_
 
+#include <string>
 #include <SDL2/SDL.h>
 #include <glm/vec2.hpp>
 #include <unordered_map>
 #include <vector>
-
-#include "Engine.h"
 
 enum INPUT_STATE {
   INPUT_STATE_UP,
@@ -43,6 +42,7 @@ class InputManager {
 
   static std::unordered_map<std::string, SDL_Scancode> key_to_scancode_map;
   [[nodiscard]] static SDL_Scancode key_to_scancode(const std::string& key);
+  static void InitKeyToScancodeMap();
 
  private:
   static inline std::unordered_map<SDL_Scancode, INPUT_STATE> keyboard_states;
@@ -55,8 +55,6 @@ class InputManager {
   static inline std::vector<int> just_became_up_buttons;
   static inline float mouse_scroll_this_frame = 0.0f;
 
-  // Engine *engine = nullptr;
-  // Renderer *renderer = nullptr;
 };
 
 

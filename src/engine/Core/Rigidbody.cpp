@@ -5,11 +5,11 @@
 #include "Rigidbody.h"
 #include <cmath>
 
-const uint16 RigidBody::CATEGORY_COLLIDER = 0x0001;  // Binary: 0000000000000001
-const uint16 RigidBody::CATEGORY_TRIGGER = 0x0002;   // Binary: 0000000000000010
-const uint16 RigidBody::CATEGORY_PHANTOM = 0x0004;   // Binary: 0000000000000100
+const uint16 Rigidbody::CATEGORY_COLLIDER = 0x0001;  // Binary: 0000000000000001
+const uint16 Rigidbody::CATEGORY_TRIGGER = 0x0002;   // Binary: 0000000000000010
+const uint16 Rigidbody::CATEGORY_PHANTOM = 0x0004;   // Binary: 0000000000000100
 
-RigidBody::RigidBody()
+Rigidbody::Rigidbody()
     : x(0.0f),
       y(0.0f),
       body_type("dynamic"),
@@ -26,13 +26,13 @@ RigidBody::RigidBody()
       enabled(true),
       body(nullptr) {}
 
-RigidBody::~RigidBody() {
+Rigidbody::~Rigidbody() {
   if (body) {
     body->GetWorld()->DestroyBody(body);
   }
 }
 
-void RigidBody::Initialize() {
+void Rigidbody::Initialize() {
   b2BodyDef bodyDef;
   if (body_type == "static")
     bodyDef.type = b2_staticBody;
@@ -62,7 +62,7 @@ void RigidBody::Initialize() {
     CreateTrigger();
 }
 
-void RigidBody::CreatePhantomFixture() {
+void Rigidbody::CreatePhantomFixture() {
   auto* polygon_shape = new b2PolygonShape();
   polygon_shape->SetAsBox(collider_width * 0.5f, collider_height * 0.5f);
   b2FixtureDef fixture_def;
@@ -77,7 +77,7 @@ void RigidBody::CreatePhantomFixture() {
   body->CreateFixture(&fixture_def);
 }
 
-void RigidBody::CreateCollider() {
+void Rigidbody::CreateCollider() {
   b2Shape* shape = nullptr;
   if (collider_type == "box") {
     auto* polygon_shape = new b2PolygonShape();
@@ -100,7 +100,7 @@ void RigidBody::CreateCollider() {
   body->CreateFixture(&fixture_def);
 }
 
-void RigidBody::CreateTrigger() {
+void Rigidbody::CreateTrigger() {
   b2Shape* shape = nullptr;
   if (trigger_type == "box") {
     auto* polygon_shape = new b2PolygonShape();
@@ -123,7 +123,7 @@ void RigidBody::CreateTrigger() {
   body->CreateFixture(&fixture_def);
 }
 
-void RigidBody::SetPosition(const b2Vec2& pos) {
+void Rigidbody::SetPosition(const b2Vec2& pos) {
   if (not body) {
     x = pos.x;
     y = pos.y;
@@ -132,44 +132,44 @@ void RigidBody::SetPosition(const b2Vec2& pos) {
   }
 }
 
-void RigidBody::SetRotation(float new_rotation) {
+void Rigidbody::SetRotation(float new_rotation) {
   body->SetTransform(body->GetPosition(), to_radian(new_rotation));
 }
 
-b2Vec2 RigidBody::GetPosition() const {
+b2Vec2 Rigidbody::GetPosition() const {
   if (not body)
     return {x, y};
   return body->GetPosition();
 }
 
-float RigidBody::GetRotation() const {
+float Rigidbody::GetRotation() const {
   return to_degree(body->GetAngle());
 }
 
-void RigidBody::AddForce(const b2Vec2& force) {
+void Rigidbody::AddForce(const b2Vec2& force) {
   body->ApplyForceToCenter(force, true);
 }
 
-void RigidBody::SetVelocity(const b2Vec2& velocity) {
+void Rigidbody::SetVelocity(const b2Vec2& velocity) {
   body->SetLinearVelocity(velocity);
 }
 
-void RigidBody::SetAngularVelocity(float degrees_clockwise) {
+void Rigidbody::SetAngularVelocity(float degrees_clockwise) {
   body->SetAngularVelocity(to_radian(degrees_clockwise));
 }
 
-void RigidBody::SetGravityScale(float scale) {
+void Rigidbody::SetGravityScale(float scale) {
   body->SetGravityScale(scale);
 }
 
-void RigidBody::SetUpDirection(const b2Vec2& direction) {
+void Rigidbody::SetUpDirection(const b2Vec2& direction) {
   b2Vec2 normalised_direction = direction;
   normalised_direction.Normalize();
   body->SetTransform(body->GetPosition(), glm::atan(normalised_direction.x,
                                                     -normalised_direction.y));
 }
 
-void RigidBody::SetRightDirection(const b2Vec2& direction) {
+void Rigidbody::SetRightDirection(const b2Vec2& direction) {
   b2Vec2 normalised_direction = direction;
   normalised_direction.Normalize();
   body->SetTransform(body->GetPosition(), glm::atan(normalised_direction.x,
@@ -177,40 +177,40 @@ void RigidBody::SetRightDirection(const b2Vec2& direction) {
                                               b2_pi / 2.0f);
 }
 
-b2Vec2 RigidBody::GetVelocity() const {
+b2Vec2 Rigidbody::GetVelocity() const {
   return body->GetLinearVelocity();
 }
 
-float RigidBody::GetAngularVelocity() const {
+float Rigidbody::GetAngularVelocity() const {
   return to_degree(body->GetAngularVelocity());
 }
 
-float RigidBody::GetGravityScale() const {
+float Rigidbody::GetGravityScale() const {
   return body->GetGravityScale();
 }
 
-b2Vec2 RigidBody::GetUpDirection() const {
+b2Vec2 Rigidbody::GetUpDirection() const {
   float angle = body->GetAngle();
   b2Vec2 upDirection(glm::sin(angle), -glm::cos(angle));
   upDirection.Normalize();
   return upDirection;
 }
 
-b2Vec2 RigidBody::GetRightDirection() const {
+b2Vec2 Rigidbody::GetRightDirection() const {
   float angle = body->GetAngle();
   b2Vec2 rightDirection(glm::cos(angle), glm::sin(angle));
   rightDirection.Normalize();
   return rightDirection;
 }
 
-float RigidBody::to_degree(float radian) {
+float Rigidbody::to_degree(float radian) {
   return radian * (180.0f / b2_pi);
 }
 
-float RigidBody::to_radian(float degree) {
+float Rigidbody::to_radian(float degree) {
   return degree * (b2_pi / 180.0f);
 }
-void RigidBody::Destroy() {
+void Rigidbody::Destroy() {
   if (body) {
     body->GetWorld()->DestroyBody(body);
   }

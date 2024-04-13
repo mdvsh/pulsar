@@ -7,8 +7,6 @@
 
 #include <rapidjson/document.h>
 
-namespace App {
-
 struct CameraManager {
   static float zoom_factor;
   static float cam_x_pos, cam_y_pos;
@@ -28,7 +26,5 @@ struct CameraManager {
   static void set_zoom(float zf);
   static float get_zoom();
 };
-
-}  // namespace App
 
 #endif  // PULSAR_SRC_ENGINE_CORE_CAMERAMANAGER_H_

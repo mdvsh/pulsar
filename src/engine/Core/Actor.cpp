@@ -27,7 +27,7 @@ void Actor::LuaOnStart(Actor* actor) {
 luabridge::LuaRef Actor::LuaAddComponent(const std::string& type) {
   const std::string key = "r" + std::to_string(g_component_id++);
 
-  auto new_comp_pair = ECS::getInstance().create_component(key, type);
+  auto new_comp_pair = App::ECS::getInstance().create_component(key, type);
   auto component = new_comp_pair.second;
   const auto& scm = SceneManager::getInstance();
 
@@ -38,7 +38,7 @@ luabridge::LuaRef Actor::LuaAddComponent(const std::string& type) {
   // TODO: use later
   actor->populate_lifecycle_functions(component, key);
 
-  if (new_comp_pair.first == ECS::ComponentType::LUA) {
+  if (new_comp_pair.first == App::ECS::ComponentType::LUA) {
     if (const auto& on_start = component["OnStart"]; on_start.isFunction())
       actor->entity_on_start_component_keys.insert(key);
   } else {
@@ -68,7 +68,7 @@ void Actor::LuaRemoveComponent(const luabridge::LuaRef& component) {
 }
 
 luabridge::LuaRef Actor::LuaCreateActor(const std::string& template_name) {
-  const auto L = ECS::getInstance().get_lua_state();
+  const auto L = App::ECS::getInstance().get_lua_state();
   if (template_name.empty())
     return {L};
 
@@ -133,7 +133,7 @@ void Actor::LuaDestroyActor(Actor* victim) {
 // TODO: refactor for code duplication removal later
 
 luabridge::LuaRef Actor::GetComponentByKey(const std::string& key) {
-  const auto L = ECS::getInstance().get_lua_state();
+  const auto L = App::ECS::getInstance().get_lua_state();
   if (const auto recently_deleted = entity_JIT_removed_components.find(key);
       recently_deleted != entity_JIT_removed_components.end()) {
     return {L};
@@ -149,7 +149,7 @@ luabridge::LuaRef Actor::GetComponentByKey(const std::string& key) {
   return {L};
 }
 luabridge::LuaRef Actor::GetComponent(const std::string& type) {
-  const auto L = ECS::getInstance().get_lua_state();
+  const auto L = App::ECS::getInstance().get_lua_state();
   const auto& scm = SceneManager::getInstance();
   Actor* actor = this;
   if (scm.jit_created_actors_map.count(_id) > 0)
@@ -170,7 +170,7 @@ luabridge::LuaRef Actor::GetComponent(const std::string& type) {
   return {L};
 }
 luabridge::LuaRef Actor::GetComponents(const std::string& type) {
-  const auto L = ECS::getInstance().get_lua_state();
+  const auto L = App::ECS::getInstance().get_lua_state();
   luabridge::LuaRef components_table = luabridge::newTable(L);
 
   const auto& scm = SceneManager::getInstance();
@@ -197,7 +197,7 @@ luabridge::LuaRef Actor::GetComponents(const std::string& type) {
 
 component_list Actor::InternalGetComponents(const std::string& type) {
   component_list query_result;
-  const auto L = ECS::getInstance().get_lua_state();
+  const auto L = App::ECS::getInstance().get_lua_state();
   const auto& scm = SceneManager::getInstance();
 
   Actor* actor = this;

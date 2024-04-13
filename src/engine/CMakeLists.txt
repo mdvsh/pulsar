@@ -5,38 +5,39 @@ include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 add_library(${NAME} STATIC
   Core/Log.cpp Core/Log.hpp Core/Debug/Instrumentor.hpp
   Core/Application.cpp Core/Application.hpp Core/Window.cpp Core/Window.hpp
-  Core/Resources.hpp Core/DPIHandler.hpp)
-        # Core/Engine.cpp
-        # Core/Engine.h
-        # Core/Renderer.cpp
-        # Core/Renderer.h
-        # Core/SceneManager.cpp
-        # Core/SceneManager.h
-        # Core/EngineUtils.h
-        # Core/ECS.cpp
-        # Core/ECS.h
-        # Core/EventBus.cpp
-        # Core/EventBus.h
-        # Core/CameraManager.cpp
-        # Core/CameraManager.h
-        # Core/ContactListener.cpp
-        # Core/ContactListener.h
-        # Core/Contact.h
-        # Core/InputManager.cpp
-        # Core/InputManager.h
-        # Core/Raycaster.cpp
-        # Core/Raycaster.h
-        # Core/RaycastResult.h
-        # Core/Rigidbody.cpp
-        # Core/Rigidbody.h
-        # Core/Actor.cpp
-        # Core/Actor.h
-        # Core/ActorTemplate.cpp
-        # Core/ActorTemplate.h
-        # Core/AudioManager.cpp
-        # Core/AudioManager.h
-        # Core/AudioHelper.h
-        # Core/Helper.h)
+  Core/Resources.hpp Core/DPIHandler.hpp
+        Core/Engine.cpp
+        Core/Engine.h
+        Core/Renderer.cpp
+        Core/Renderer.h
+        Core/SceneManager.cpp
+        Core/SceneManager.h
+        Core/EngineUtils.h
+        Core/ECS.cpp
+        Core/ECS.h
+        Core/EventBus.cpp
+        Core/EventBus.h
+        Core/CameraManager.cpp
+        Core/CameraManager.h
+        Core/ContactListener.cpp
+        Core/ContactListener.h
+        Core/Contact.h
+        Core/InputManager.cpp
+        Core/InputManager.h
+        Core/Raycaster.cpp
+        Core/Raycaster.h
+        Core/RaycastResult.h
+        Core/Rigidbody.cpp
+        Core/Rigidbody.h
+        Core/Actor.cpp
+        Core/Actor.h
+        Core/ActorTemplate.cpp
+        Core/ActorTemplate.h
+        Core/AudioManager.cpp
+        Core/AudioManager.h
+        Core/AudioHelper.h
+        Core/Helper.h
+        )
 
 # Define set of OS specific files to include
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")

@@ -5,7 +5,6 @@
 #include "CameraManager.h"
 #include "EngineUtils.h"
 
-namespace App {
 const int CameraManager::DEFAULT_CAMERA_WIDTH = 13;
 const int CameraManager::DEFAULT_CAMERA_HEIGHT = 9;
 
@@ -62,5 +61,3 @@ void CameraManager::calculate_camera_pos(const float camera_offset_x,
   cam_x_pos += (camera_offset_x - cam_x_pos) * cam_ease_factor;
   cam_y_pos += (camera_offset_y - cam_y_pos) * cam_ease_factor;
 }
-
-}  // namespace App

@@ -11,9 +11,8 @@
 #include "Actor.h"
 #include "Contact.h"
 #include "Renderer.h"  // for static log_error
-// #include "RigidBody.h"
 
-class RigidBody;
+class Rigidbody;
 
 class ContactListener : public b2ContactListener {
  public:

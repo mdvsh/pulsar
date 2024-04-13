@@ -11,10 +11,10 @@
 #include "Actor.h"
 #include "SceneManager.h"
 
-class RigidBody {
+class Rigidbody {
  public:
-  RigidBody();
-  ~RigidBody();
+  Rigidbody();
+  ~Rigidbody();
 
   void Initialize();
   void Destroy();
@@ -76,8 +76,8 @@ class RigidBody {
   static const uint16 CATEGORY_PHANTOM;
 
   friend std::ostream& operator<<(std::ostream& os,
-                                  const RigidBody& rigidBody) {
-    os << "RigidBody: " << rigidBody.key << " at (" << rigidBody.x << ", "
+                                  const Rigidbody& rigidBody) {
+    os << "Rigidbody: " << rigidBody.key << " at (" << rigidBody.x << ", "
        << rigidBody.y << ")";
     return os;
   }

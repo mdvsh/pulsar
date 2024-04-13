@@ -73,7 +73,6 @@ class Engine {
   bool is_game_won = false;
 
   std::queue<std::string> scene_change_queue;
-  rapidjson::Document game_config = rapidjson::Document();
 };
 
 #endif  // PULSAR_SRC_ENGINE_CORE_ENGINE_H_

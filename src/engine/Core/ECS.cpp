@@ -14,7 +14,7 @@
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "Actor.h"
-#include "RigidBody.h"
+#include "Rigidbody.h"
 #include "Raycaster.h"
 
 namespace App {
@@ -181,51 +181,51 @@ void ECS::reg_actor_static_namespace() {
 }
 void ECS::reg_rigidbody_class() {
   luabridge::getGlobalNamespace(lua_state)
-      .beginClass<RigidBody>("Rigidbody")
-      .addData("x", &RigidBody::x)
-      .addData("y", &RigidBody::y)
-      .addData("body_type", &RigidBody::body_type)
-      .addData("precise", &RigidBody::precise)
-      .addData("gravity_scale", &RigidBody::gravity_scale)
-      .addData("density", &RigidBody::density)
-      .addData("angular_friction", &RigidBody::angular_friction)
-      .addData("rotation", &RigidBody::rotation)
-      .addData("has_collider", &RigidBody::has_collider)
-      .addData("has_trigger", &RigidBody::has_trigger)
-      .addData("type", &RigidBody::type)
-      .addData("key", &RigidBody::key)
-      .addData("actor", &RigidBody::actor)
-      .addData("enabled", &RigidBody::enabled)
-      .addData("collider_type", &RigidBody::collider_type)
-      .addData("width", &RigidBody::collider_width)
-      .addData("height", &RigidBody::collider_height)
-      .addData("radius", &RigidBody::collider_radius)
-      .addData("bounciness", &RigidBody::bounciness)
-      .addData("friction", &RigidBody::friction)
+      .beginClass<Rigidbody>("Rigidbody")
+      .addData("x", &Rigidbody::x)
+      .addData("y", &Rigidbody::y)
+      .addData("body_type", &Rigidbody::body_type)
+      .addData("precise", &Rigidbody::precise)
+      .addData("gravity_scale", &Rigidbody::gravity_scale)
+      .addData("density", &Rigidbody::density)
+      .addData("angular_friction", &Rigidbody::angular_friction)
+      .addData("rotation", &Rigidbody::rotation)
+      .addData("has_collider", &Rigidbody::has_collider)
+      .addData("has_trigger", &Rigidbody::has_trigger)
+      .addData("type", &Rigidbody::type)
+      .addData("key", &Rigidbody::key)
+      .addData("actor", &Rigidbody::actor)
+      .addData("enabled", &Rigidbody::enabled)
+      .addData("collider_type", &Rigidbody::collider_type)
+      .addData("width", &Rigidbody::collider_width)
+      .addData("height", &Rigidbody::collider_height)
+      .addData("radius", &Rigidbody::collider_radius)
+      .addData("bounciness", &Rigidbody::bounciness)
+      .addData("friction", &Rigidbody::friction)
 
-      .addData("trigger_type", &RigidBody::trigger_type)
-      .addData("trigger_width", &RigidBody::trigger_width)
-      .addData("trigger_height", &RigidBody::trigger_height)
-      .addData("trigger_radius", &RigidBody::trigger_radius)
+      .addData("trigger_type", &Rigidbody::trigger_type)
+      .addData("trigger_width", &Rigidbody::trigger_width)
+      .addData("trigger_height", &Rigidbody::trigger_height)
+      .addData("trigger_radius", &Rigidbody::trigger_radius)
 
-      .addFunction("OnStart", &RigidBody::Initialize)
-      .addFunction("OnDestroy", &RigidBody::Destroy)
-      .addFunction("GetPosition", &RigidBody::GetPosition)
-      .addFunction("SetPosition", &RigidBody::SetPosition)
-      .addFunction("GetRotation", &RigidBody::GetRotation)
-      .addFunction("SetRotation", &RigidBody::SetRotation)
+      .addFunction("OnStart", &Rigidbody::Initialize)
+      .addFunction("OnDestroy", &Rigidbody::Destroy)
+      .addFunction("GetPosition", &Rigidbody::GetPosition)
+      .addFunction("SetPosition", &Rigidbody::SetPosition)
+      .addFunction("GetRotation", &Rigidbody::GetRotation)
+      .addFunction("SetRotation", &Rigidbody::SetRotation)
 
-      .addFunction("AddForce", &RigidBody::AddForce)
-      .addFunction("SetVelocity", &RigidBody::SetVelocity)
-      .addFunction("SetAngularVelocity", &RigidBody::SetAngularVelocity)
-      .addFunction("SetGravityScale", &RigidBody::SetGravityScale)
-      .addFunction("SetUpDirection", &RigidBody::SetUpDirection)
-      .addFunction("SetRightDirection", &RigidBody::SetRightDirection)
-      .addFunction("GetVelocity", &RigidBody::GetVelocity)
-      .addFunction("GetAngularVelocity", &RigidBody::GetAngularVelocity)
-      .addFunction("GetGravityScale", &RigidBody::GetGravityScale)
-      .addFunction("GetUpDirection", &RigidBody::GetUpDirection)
-      .addFunction("GetRightDirection", &RigidBody::GetRightDirection)
+      .addFunction("AddForce", &Rigidbody::AddForce)
+      .addFunction("SetVelocity", &Rigidbody::SetVelocity)
+      .addFunction("SetAngularVelocity", &Rigidbody::SetAngularVelocity)
+      .addFunction("SetGravityScale", &Rigidbody::SetGravityScale)
+      .addFunction("SetUpDirection", &Rigidbody::SetUpDirection)
+      .addFunction("SetRightDirection", &Rigidbody::SetRightDirection)
+      .addFunction("GetVelocity", &Rigidbody::GetVelocity)
+      .addFunction("GetAngularVelocity", &Rigidbody::GetAngularVelocity)
+      .addFunction("GetGravityScale", &Rigidbody::GetGravityScale)
+      .addFunction("GetUpDirection", &Rigidbody::GetUpDirection)
+      .addFunction("GetRightDirection", &Rigidbody::GetRightDirection)
       .endClass();
 }
 void ECS::reg_vector2() {
@@ -296,7 +296,7 @@ std::pair<ECS::ComponentType, luabridge::LuaRef> ECS::create_component(
   if (name == "Rigidbody") {
     // Special C++ component
     SceneManager::getInstance().CreatePhysWorld();
-    auto* rigidbody = new RigidBody();
+    auto* rigidbody = new Rigidbody();
     rigidbody->key = key;
     rigidbody->type = name;
     luabridge::LuaRef component(lua_state, rigidbody);
