@@ -21,7 +21,8 @@ std::unordered_map<std::string, SDL_Texture*> Renderer::textures;
 void Renderer::initialize(const rapidjson::Document& game_config) {
   const std::string game_title =
       EngineUtils::LoadStringFromJson(game_config, "game_title");
-  const std::string rendering_config_path = "resources/rendering.config";
+  // const std::string rendering_config_path = "resources/rendering.config";
+  const std::string rendering_config_path = (App::Resources::game_path() / "rendering.config").generic_string();
   Uint8 clear_color_r = 255;
   Uint8 clear_color_g = 255;
   Uint8 clear_color_b = 255;

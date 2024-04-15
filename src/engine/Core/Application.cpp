@@ -4,10 +4,10 @@
 
 // For clang-tidy include check
 #include <SDL_error.h>
-#include <SDL_filesystem.h>
 #include <SDL_events.h>
-#include <SDL_video.h>
+#include <SDL_filesystem.h>
 #include <SDL_render.h>
+#include <SDL_video.h>
 
 #include <rapidjson/document.h>
 
@@ -18,18 +18,20 @@
 #include <memory>
 #include <string>
 
+#include "Core/AudioManager.h"
+#include "Core/CameraManager.h"
 #include "Core/DPIHandler.hpp"
 #include "Core/Debug/Instrumentor.hpp"
+#include "Core/EngineUtils.h"
+#include "Core/EventBus.h"
+#include "Core/Helper.h"
+#include "Core/InputManager.h"
 #include "Core/Log.hpp"
+#include "Core/Renderer.h"
 #include "Core/Resources.hpp"
+#include "Core/SceneManager.h"
 #include "Core/Window.hpp"
 #include "Settings/Project.hpp"
-#include "Core/EngineUtils.h"
-//#include "Core/Renderer.h"
-#include "Core/SceneManager.h"
-#include "Core/AudioManager.h"
-#include "Core/InputManager.h"
-#include "Core/CameraManager.h"
 
 namespace App {
 
@@ -99,21 +101,12 @@ ExitStatus App::Application::run() {
   scene_files = get_proj_scene_files();
   size_t selected_scene_index = 0;
 
-  // -------- ENGINE (legacy) boot code
-  auto game_config_path = Resources::game_path();
-  game_config_path /= "game.config";
+  const std::string game_config_path =
+      (Resources::game_path() / "game.config").generic_string();
   rapidjson::Document game_config;
-  EngineUtils::ReadJsonFile(game_config_path.generic_string(), game_config);
-
+  EngineUtils::ReadJsonFile(game_config_path, game_config);
   SceneManager& scene_manager = SceneManager::getInstance();
-
   scene_manager.initialize(game_config);
-  // renderer.initialize(game_config); do on it's own thread
-  CameraManager::initialize();
-  AudioManager::initialize();
-  AudioManager::start_intro_music(game_config);
-  InputManager::InitKeyToScancodeMap();
-  InputManager::Init();
 
   m_running = true;
   while (m_running) {
@@ -221,6 +214,7 @@ ExitStatus App::Application::run() {
     }
 
     draw_editor_windows();
+    draw_playback_controls();
 
     // Rendering
     ImGui::Render();
@@ -300,9 +294,10 @@ void Application::draw_editor_windows() {
 
   // Scene Hierarchy
   ImGui::Begin("Hierarchy");
-  for (const std::string &scene : scene_files) {
+  for (const std::string& scene : scene_files) {
     if (ImGui::TreeNode(scene.c_str())) {
-      for (const auto& actor : SceneManager::getInstance().copy_of_scene_actors) {
+      for (const auto& actor :
+           SceneManager::getInstance().copy_of_scene_actors) {
         if (ImGui::Selectable(actor->name.c_str(),
                               selected_actor == actor->name)) {
           selected_actor = actor->name;
@@ -316,9 +311,67 @@ void Application::draw_editor_windows() {
 
   // Assets
   ImGui::Begin("Assets");
-  // Display assets (e.g., textures, models, audio files)
-  // You can use ImGui::ListBox, ImGui::ImageButton, etc., to display and
-  // interact with assets
+
+  // Load assets from the resources folder
+  static std::vector<std::string> asset_paths;
+  static std::vector<std::string> asset_names;
+  // static std::vector<ImTextureID> asset_thumbnails;
+  std::string resources_path = Resources::game_path().generic_string();
+  if (asset_paths.empty()) {
+    // Load assets from the resources folder
+    std::vector<std::string> supported_extensions = {".png", ".jpg", ".jpeg",
+                                                     ".bmp", ".wav", ".mp3"};
+
+    for (const auto& entry :
+         std::filesystem::recursive_directory_iterator(resources_path)) {
+      if (entry.is_regular_file()) {
+        std::string extension = entry.path().extension().string();
+        std::transform(extension.begin(), extension.end(), extension.begin(),
+                       ::tolower);
+
+        if (std::find(supported_extensions.begin(), supported_extensions.end(),
+                      extension) != supported_extensions.end()) {
+          asset_paths.push_back(entry.path().string());
+          asset_names.push_back(entry.path().filename().string());
+        }
+      }
+    }
+  }
+
+  // Display assets
+  static int selected_asset = -1;
+  ImGui::BeginChild("AssetThumbnails", ImVec2(200, 0), true);
+  for (size_t i = 0; i < asset_paths.size(); ++i) {
+    // if (asset_thumbnails[i]) {
+    //   ImGui::ImageButton(asset_thumbnails[i], ImVec2(64, 64));
+    // } else {
+    ImGui::Button(asset_names[i].c_str(), ImVec2(64, 64));
+    // }
+
+    if (ImGui::IsItemClicked()) {
+      selected_asset = i;
+    }
+
+    ImGui::SameLine();
+    ImGui::Text("%s", asset_names[i].c_str());
+  }
+  ImGui::EndChild();
+
+  // Display asset details
+  if (selected_asset >= 0) {
+    ImGui::SameLine();
+    ImGui::BeginChild("AssetDetails", ImVec2(0, 0), true);
+
+    // if (asset_thumbnails[selected_asset]) {
+    //   ImGui::ImageButton(asset_thumbnails[selected_asset], ImVec2(256, 256));
+    // } else {
+    ImGui::Text("[thumbnail placeholder] File: %s",
+                asset_names[selected_asset].c_str());
+    // }
+
+    ImGui::EndChild();
+  }
+
   ImGui::End();
 
   // Component Properties
@@ -326,33 +379,134 @@ void Application::draw_editor_windows() {
   if (!selected_actor.empty()) {
     for (const std::string& scene : scene_files) {
       if (scene == selected_scene) {
-        for (const auto& actor : SceneManager::getInstance().copy_of_scene_actors) {
+        for (const auto& actor :
+             SceneManager::getInstance().copy_of_scene_actors) {
           if (actor->name == selected_actor) {
             ImGui::Text("Actor: %s", actor->name.c_str());
             ImGui::Separator();
 
             for (const auto& component : actor->entity_components_by_type) {
               if (ImGui::CollapsingHeader(component.first.c_str())) {
-                // Display component properties using ImGui widgets
-                // e.g., ImGui::InputText, ImGui::Checkbox, ImGui::SliderFloat,
-                // etc. based on the component type and its properties
-//                // Example property display
-//                if (component.type == "Transform") {
-//                  // Display transform properties
-//                  static float position[3] = {0.0f, 0.0f, 0.0f};
-//                  ImGui::InputFloat3("Position", position);
-//
-//                  static float rotation[3] = {0.0f, 0.0f, 0.0f};
-//                  ImGui::InputFloat3("Rotation", rotation);
-//
-//                  static float scale[3] = {1.0f, 1.0f, 1.0f};
-//                  ImGui::InputFloat3("Scale", scale);
-//                } else if (component.type == "Mesh") {
-//                  // Display mesh properties
-//                  static char mesh_path[256] = "";
-//                  ImGui::InputText("Mesh Path", mesh_path, sizeof(mesh_path));
-//                }
-//                // Add more component property displays as needed
+                if (component.first == "Transform") {
+                  // Display Transform properties
+                  static float position[3] = {0.0f, 0.0f, 0.0f};
+                  ImGui::InputFloat3("Position", position);
+
+                  static float rotation[3] = {0.0f, 0.0f, 0.0f};
+                  ImGui::InputFloat3("Rotation", rotation);
+
+                  static float scale[3] = {1.0f, 1.0f, 1.0f};
+                  ImGui::InputFloat3("Scale", scale);
+                } else if (component.first == "SpriteRenderer") {
+                  // Display SpriteRenderer properties
+                  static char image_path[256] = "";
+                  ImGui::InputText("Image Path", image_path,
+                                   sizeof(image_path));
+
+                  static int sorting_order = 0;
+                  ImGui::InputInt("Sorting Order", &sorting_order);
+
+                  static float pivot_x = 0.5f;
+                  ImGui::SliderFloat("Pivot X", &pivot_x, 0.0f, 1.0f);
+
+                  static float pivot_y = 0.5f;
+                  ImGui::SliderFloat("Pivot Y", &pivot_y, 0.0f, 1.0f);
+
+                  ImGuiColorEditFlags misc_flags =
+                      ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_NoDragDrop |
+                      ImGuiColorEditFlags_AlphaPreview;
+                  static ImVec4 color =
+                      ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f,
+                             200.0f / 255.0f);
+                  ImGui::ColorEdit3("Color", (float*)&color, misc_flags);
+                }
+              }
+            }
+            ImGui::Separator();
+            static bool addComponentModal = false;
+            static char newComponentName[64] = "";
+
+            if (ImGui::Button("Add Component")) {
+              addComponentModal = true;
+              memset(newComponentName, 0, sizeof(newComponentName));
+            }
+
+            if (addComponentModal) {
+              ImGui::OpenPopup("Add Component");
+              if (ImGui::BeginPopupModal("Add Component", &addComponentModal,
+                                         ImGuiWindowFlags_AlwaysAutoResize)) {
+                ImGui::InputText("Component Name", newComponentName,
+                                 sizeof(newComponentName));
+
+                if (ImGui::Button("Create")) {
+                  std::string componentPath =
+                      resources_path + "/component_types/" +
+                      std::string(newComponentName) + ".lua";
+                  std::ofstream file(componentPath);
+                  file << "-- New component" << std::endl;
+                  file.close();
+                  addComponentModal = false;
+                }
+
+                ImGui::SameLine();
+                if (ImGui::Button("Cancel")) {
+                  addComponentModal = false;
+                }
+
+                ImGui::EndPopup();
+              }
+            }
+            //            -----------
+            static bool addComponentFromTemplateModal = false;
+            static int selectedTemplate = -1;
+            static char newComponentNameFromTemplate[64] = "";
+            static std::vector<std::string> componentTemplates =
+                LoadComponentTemplates();
+
+            if (ImGui::Button("Add Component from Template")) {
+              addComponentFromTemplateModal = true;
+              selectedTemplate = -1;
+              memset(newComponentNameFromTemplate, 0,
+                     sizeof(newComponentNameFromTemplate));
+              ImGui::OpenPopup("Add Component from Template");
+            }
+            if (addComponentFromTemplateModal) {
+              if (ImGui::BeginPopupModal("Add Component from Template", nullptr,
+                                         ImGuiWindowFlags_AlwaysAutoResize)) {
+                ImGui::ListBox(
+                    "Templates", &selectedTemplate,
+                    [](void* data, int idx, const char** out_text) {
+                      auto* templates = (std::vector<std::string>*)data;
+                      *out_text = (*templates)[idx].c_str();
+                      strcpy(newComponentNameFromTemplate, *out_text);
+                      return true;
+                    },
+                    (void*)&componentTemplates, componentTemplates.size(), 4);
+
+                ImGui::InputText("Component Name", newComponentNameFromTemplate,
+                                 sizeof(newComponentNameFromTemplate));
+
+                if (ImGui::Button("Create") && selectedTemplate >= 0) {
+                  std::string sourcePath =
+                      resources_path + "/component_types/" +
+                      componentTemplates[selectedTemplate] + ".lua";
+                  std::string destPath =
+                      resources_path + "/component_types/" +
+                      std::string(newComponentNameFromTemplate) + ".lua";
+                  std::filesystem::copy_file(
+                      sourcePath, destPath,
+                      std::filesystem::copy_options::overwrite_existing);
+                  addComponentFromTemplateModal = false;
+                  ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::SameLine();
+                if (ImGui::Button("Cancel")) {
+                  addComponentFromTemplateModal = false;
+                  ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::EndPopup();
               }
             }
           }
@@ -362,7 +516,119 @@ void Application::draw_editor_windows() {
   }
   ImGui::End();
 
-  ImGui::End();  // End of Editor window
+  ImGui::End();  // End of Editor window`x`
+}
+
+void Application::draw_playback_controls() {
+  ImGui::Begin("Playback Controls");
+
+  if (ImGui::Button("Play")) {
+    if (!game_thread.joinable()) {
+      is_game_running = true;
+      is_game_paused = false;
+      start_game_thread();
+    } else {
+      is_game_paused = false;
+      game_cv.notify_one();
+    }
+  }
+  ImGui::SameLine();
+
+  if (ImGui::Button("Pause")) {
+    is_game_paused = true;
+  }
+  ImGui::SameLine();
+
+  if (ImGui::Button("Stop")) {
+    is_game_running = false;
+    is_game_paused = false;
+    game_cv.notify_one();
+    stop_game_thread();
+  }
+
+  ImGui::End();
+}
+
+void Application::run_game_thread() {
+  const std::string game_config_path =
+      (Resources::game_path() / "game.config").generic_string();
+  rapidjson::Document game_config;
+  EngineUtils::ReadJsonFile(game_config_path, game_config);
+
+  SceneManager& scene_manager = SceneManager::getInstance();
+  Renderer& renderer = Renderer::getInstance();
+
+  renderer.initialize(game_config);
+  CameraManager::initialize();
+  AudioManager::initialize();
+  AudioManager::start_intro_music(game_config);
+  InputManager::InitKeyToScancodeMap();
+  InputManager::Init();
+
+  while (is_game_running) {
+    std::unique_lock<std::mutex> lock(game_mutex);
+    game_cv.wait(lock, [&] { return !is_game_paused; });
+    lock.unlock();
+
+    SDL_Event input_event;
+    while (SDL_PollEvent(&input_event)) {
+      InputManager::ProcessEvent(input_event);
+      if (input_event.type == SDL_QUIT) {
+        is_game_running = false;
+        break;
+      }
+    }
+    SDL_RenderClear(renderer.get_sdl_renderer());
+    AudioManager::stop_intro_music();
+
+    scene_manager.update_scene_actors();
+
+    if (SceneManager::latest_scene_change_request) {
+      scene_manager.trigger_scene_change(
+          *SceneManager::latest_scene_change_request);
+      SceneManager::latest_scene_change_request.reset();
+    }
+
+    EventBus::ProcessPendingSubscriptions();
+    EventBus::ProcessPendingUnsubscriptions();
+
+    if (not is_game_over and not is_game_won)
+      renderer.end_of_frame_render();
+
+    InputManager::LateUpdate();
+
+    scene_manager.StepPhysWorld();
+
+    SDL_RenderPresent(renderer.get_sdl_renderer());
+  }
+  SDL_DestroyRenderer(renderer.get_sdl_renderer());
+  SDL_DestroyWindow(renderer.get_game_window());
+  SDL_Quit();
+}
+
+void Application::start_game_thread() {
+  if (!game_thread.joinable()) {
+    game_thread = std::thread(&Application::run_game_thread, this);
+  }
+}
+
+void Application::stop_game_thread() {
+  if (game_thread.joinable()) {
+    game_thread.join();
+  }
+}
+std::vector<std::string> Application::LoadComponentTemplates() {
+  std::vector<std::string> templates;
+  auto comp_path = Resources::game_path();
+  comp_path /= "component_types";
+
+  for (const auto& entry : std::filesystem::directory_iterator(comp_path)) {
+    if (entry.is_regular_file() and entry.path().extension() == ".lua") {
+      templates.push_back(entry.path().stem().string());
+    }
+  }
+
+  return templates;
 }
 
 }  // namespace App

@@ -1,14 +1,6 @@
 {
 	"actors": [
 		{
-			"name": "camera",
-			"components": {
-				"1": {
-					"type": "CameraManager"
-				}
-			}
-		},
-		{
 			"name": "GameManager",
 			"components": {
 				"1": {
@@ -17,9 +9,76 @@
 			}
 		},
 		{
-			"name": "HUD",
+			"name": "background1",
 			"components": {
-				"1": { 
+				"1": {
+					"type": "Transform",
+					"x": 0,
+					"y": 0
+				},
+				"2": {
+					"type": "MovingBackground"
+				},
+				"3": {
+					"type": "SpriteRenderer",
+					"sprite": "background"
+				}
+			}
+		},
+		{
+			"name": "background2",
+			"components": {
+				"1": {
+					"type": "Transform",
+					"x": 667,
+					"y": 0
+				},
+				"2": {
+					"type": "MovingBackground"
+				},
+				"3": {
+					"type": "SpriteRenderer",
+					"sprite": "background"
+				}
+			}
+		},
+		{
+			"name": "donna",
+			"components": {
+				"1": {
+					"type": "Transform",
+					"x": 100,
+					"y": 100
+				},
+				"2": {
+					"type": "Donna"
+				},
+				"3": {
+					"type": "KeyboardControl"
+				},
+				"4": {
+					"type": "DonnaAnimation"
+				},
+				"5": {
+					"type": "SpriteRenderer",
+					"sprite": "donna1"
+				}
+			}
+		},
+		{
+			"name": "bgm",
+			"components": {
+				"1": {
+					"type": "PlayAudio",
+					"clip": "sky_bgm",
+					"loop": true
+				}
+			}
+		},
+		{
+			"name": "hud",
+			"components": {
+				"1": {
 					"type": "Hud"
 				}
 			}

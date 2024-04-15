@@ -118,7 +118,7 @@ void Engine::run_game() {
 
     scene_manager.StepPhysWorld();
 
-    Helper::SDL_RenderPresent498(renderer.get_sdl_renderer());
+    SDL_RenderPresent(renderer.get_sdl_renderer());
   }
   SDL_DestroyRenderer(renderer.get_sdl_renderer());
   SDL_DestroyWindow(renderer.get_game_window());

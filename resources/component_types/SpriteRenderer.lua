@@ -7,19 +7,11 @@ SpriteRenderer = {
 	sorting_order = 0,
 
 	OnStart = function(self)
-		self.pos = Vector2(0, 0)
-		self.rot_degrees = 0
+		self.transform = self.actor:GetComponent("Transform")
 	end,
 
 	OnUpdate = function(self)
-		self.rb = self.actor:GetComponent("Rigidbody")
-
-		if self.rb ~= nil then
-			self.pos = self.rb:GetPosition()
-			self.rot_degrees = self.rb:GetRotation()
-		end
-
-		Image.DrawEx(self.sprite, self.pos.x, self.pos.y, self.rot_degrees, 1.0, 1.0, 0.5, 0.5, self.r, self.g, self.b, self.a, self.sorting_order)
+		Image.DrawUIEx(self.sprite, self.transform.x, self.transform.y, self.r, self.g, self.b, self.a, self.sorting_order)
 	end
 }
 

@@ -1,11 +1,13 @@
 #pragma once
 
 #include <SDL2/SDL.h>
-
-#include <memory>
+#include <condition_variable>
 #include <filesystem>
+#include <memory>
+#include <mutex>
 #include <queue>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "Core/Window.hpp"
@@ -34,13 +36,19 @@ class Application {
 
   void open_project();
   void draw_editor_windows();
+  void draw_playback_controls();
   static std::vector<std::string> get_proj_scene_files();
+  static std::vector<std::string> LoadComponentTemplates();
 
-  bool engine_running = true;
   void set_engine_off() {
-    if (engine_running)
-      engine_running = false;
+    if (is_game_running)
+      is_game_running = false;
   }
+
+  void run_game_thread();
+  std::thread game_thread;
+  void start_game_thread();
+  void stop_game_thread();
 
   std::vector<std::string> scene_files;
   std::string selected_actor;
@@ -56,10 +64,18 @@ class Application {
   bool m_show_landing_panel{true};
   bool m_show_debug_panel{false};
   bool m_show_demo_panel{false};
-//  bool is_game_over{false};
-//  bool is_game_won{false};
+  //  bool is_game_over{false};
+  //  bool is_game_won{false};
+
+  std::atomic<bool> is_game_running{false};
+  std::atomic<bool> is_game_paused{false};
+  std::atomic<bool> is_game_over{false};
+  std::atomic<bool> is_game_won{false};
+  std::mutex game_mutex;
+  std::condition_variable game_cv;
 
   std::queue<std::string> scene_change_queue;
+  std::vector<std::string> actor_templates;
 };
 
 }  // namespace App
