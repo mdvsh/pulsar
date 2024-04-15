@@ -3,7 +3,7 @@
 > my eecs 498 game engine
 
 [wip] a fast, cross-platform distributable 2D game engine. 
-with c++17, perf engineering, box2d, sdl, lua middleware and modular ECS.
+with c++20, perf engineering, box2d, sdl, lua middleware and modular ECS.
 
 ---
 

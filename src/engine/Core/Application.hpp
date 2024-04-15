@@ -3,11 +3,11 @@
 #include <SDL2/SDL.h>
 
 #include <memory>
+#include <filesystem>
 #include <queue>
 #include <string>
 #include <vector>
 
-#include <rapidjson/document.h>
 #include "Core/Window.hpp"
 
 namespace App {
@@ -31,13 +31,20 @@ class Application {
   void on_minimize();
   void on_shown();
   void on_close();
-  void load_initial_settings();
+
+  void open_project();
+  void draw_editor_windows();
+  static std::vector<std::string> get_proj_scene_files();
 
   bool engine_running = true;
   void set_engine_off() {
     if (engine_running)
       engine_running = false;
   }
+
+  std::vector<std::string> scene_files;
+  std::string selected_actor;
+  std::string selected_scene;
 
  private:
   ExitStatus m_exit_status{ExitStatus::SUCCESS};
@@ -49,8 +56,8 @@ class Application {
   bool m_show_landing_panel{true};
   bool m_show_debug_panel{false};
   bool m_show_demo_panel{false};
-  bool is_game_over{false};
-  bool is_game_won{false};
+//  bool is_game_over{false};
+//  bool is_game_won{false};
 
   std::queue<std::string> scene_change_queue;
 };

@@ -8,6 +8,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
 #include <SDL2_ttf/SDL_ttf.h>
+#include "Core/Resources.hpp"
 
 // clang-format off
 #include "lua.hpp"
@@ -53,7 +54,8 @@ class Renderer {
   static std::deque<IMGRenderRequest> img_render_requests;
 
   bool showed_intro = false;
-  const std::string IMAGES_PATH = "resources/images/";
+  // const std::string IMAGES_PATH = "resources/images/";
+  const std::string IMAGES_PATH = (App::Resources::game_path() / "images").generic_string();
 
  public:
   Renderer(const Renderer&) = delete;

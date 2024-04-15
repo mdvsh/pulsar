@@ -12,6 +12,7 @@
 #include "ActorTemplate.h"
 #include "ECS.h"
 #include "EngineUtils.h"
+#include "Resources.hpp"
 
 std::optional<std::string> SceneManager::latest_scene_change_request =
     std::nullopt;
@@ -24,20 +25,23 @@ void SceneManager::initialize(const rapidjson::Document& game_config) {
     std::exit(0);
   }
 
-  if (const std::string lua_components_path = "resources/component_types/";
-      std::filesystem::exists(lua_components_path)) {
+  auto resources_path = App::Resources::game_path();
+  auto lua_components_path = resources_path / "component_types";
+
+  if (std::filesystem::exists(lua_components_path)) {
     auto& ecs = App::ECS::getInstance();
     ecs.initialize();
   }
 
-  const std::string scene_path = "resources/scenes/" + initial_scene + ".scene";
-  if (not std::filesystem::exists(scene_path)) {
+  std::string scene_path = initial_scene + ".scene";
+  auto scene_file = resources_path / "scenes" / scene_path;
+  if (not std::filesystem::exists(scene_file)) {
     std::cout << "error: scene " << initial_scene << " is missing";
     std::exit(0);
   }
 
   rapidjson::Document initial_scene_data;
-  EngineUtils::ReadJsonFile(scene_path, initial_scene_data);
+  EngineUtils::ReadJsonFile(scene_file, initial_scene_data);
   load_scene_actors(initial_scene_data);
   current_scene_name = initial_scene;
 }

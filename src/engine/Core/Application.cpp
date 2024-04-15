@@ -1,6 +1,16 @@
 #include "Application.hpp"
 
 #include <SDL2/SDL.h>
+
+// For clang-tidy include check
+#include <SDL_error.h>
+#include <SDL_filesystem.h>
+#include <SDL_events.h>
+#include <SDL_video.h>
+#include <SDL_render.h>
+
+#include <rapidjson/document.h>
+
 #include <backends/imgui_impl_sdl2.h>
 #include <backends/imgui_impl_sdlrenderer2.h>
 #include <imgui.h>
@@ -11,11 +21,15 @@
 #include "Core/DPIHandler.hpp"
 #include "Core/Debug/Instrumentor.hpp"
 #include "Core/Log.hpp"
-#include "Core/Renderer.h"
 #include "Core/Resources.hpp"
-#include "Core/SceneManager.h"
 #include "Core/Window.hpp"
 #include "Settings/Project.hpp"
+#include "Core/EngineUtils.h"
+//#include "Core/Renderer.h"
+#include "Core/SceneManager.h"
+#include "Core/AudioManager.h"
+#include "Core/InputManager.h"
+#include "Core/CameraManager.h"
 
 namespace App {
 
@@ -30,8 +44,6 @@ Application::Application(const std::string& title) {
   }
 
   m_window = std::make_unique<Window>(Window::Settings{title});
-  // m_engine = std::make_unique<Engine>();
-  // m_engine->load_initial_settings();
 }
 
 Application::~Application() {
@@ -75,7 +87,6 @@ ExitStatus App::Application::run() {
   const float font_size{18.0F * font_scaling_factor};
   const std::string font_path{
       Resources::font_path("Manrope.ttf").generic_string()};
-
   io.Fonts->AddFontFromFileTTF(font_path.c_str(), font_size);
   io.FontDefault = io.Fonts->AddFontFromFileTTF(font_path.c_str(), font_size);
   DPIHandler::set_global_font_scaling(&io);
@@ -84,6 +95,25 @@ ExitStatus App::Application::run() {
   ImGui_ImplSDL2_InitForSDLRenderer(m_window->get_native_window(),
                                     m_window->get_native_renderer());
   ImGui_ImplSDLRenderer2_Init(m_window->get_native_renderer());
+
+  scene_files = get_proj_scene_files();
+  size_t selected_scene_index = 0;
+
+  // -------- ENGINE (legacy) boot code
+  auto game_config_path = Resources::game_path();
+  game_config_path /= "game.config";
+  rapidjson::Document game_config;
+  EngineUtils::ReadJsonFile(game_config_path.generic_string(), game_config);
+
+  SceneManager& scene_manager = SceneManager::getInstance();
+
+  scene_manager.initialize(game_config);
+  // renderer.initialize(game_config); do on it's own thread
+  CameraManager::initialize();
+  AudioManager::initialize();
+  AudioManager::start_intro_music(game_config);
+  InputManager::InitKeyToScancodeMap();
+  InputManager::Init();
 
   m_running = true;
   while (m_running) {
@@ -119,6 +149,9 @@ ExitStatus App::Application::run() {
 
       if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File")) {
+          if (ImGui::MenuItem("Open Project", "Cmd+O")) {
+            open_project();
+          }
           if (ImGui::MenuItem("Exit", "Cmd+Q")) {
             stop();
           }
@@ -133,6 +166,15 @@ ExitStatus App::Application::run() {
 
         ImGui::EndMainMenuBar();
       }
+
+      ImGui::Begin("Project");
+      for (size_t i = 0; i < scene_files.size(); ++i) {
+        if (ImGui::Selectable(scene_files[i].c_str(),
+                              i == selected_scene_index)) {
+          selected_scene_index = i;
+        }
+      }
+      ImGui::End();
 
       if (m_show_landing_panel) {
         ImGui::SetNextWindowDockID(dockspace_id, ImGuiCond_FirstUseEver);
@@ -177,6 +219,8 @@ ExitStatus App::Application::run() {
         ImGui::End();
       }
     }
+
+    draw_editor_windows();
 
     // Rendering
     ImGui::Render();
@@ -228,6 +272,97 @@ void Application::on_close() {
   APP_PROFILE_FUNCTION();
 
   stop();
+}
+void Application::open_project() {
+  APP_DEBUG("trying to open project natively");
+}
+
+std::vector<std::string> Application::get_proj_scene_files() {
+  std::vector<std::string> scene_files;
+  auto game_path = Resources::game_path();
+  game_path /= "scenes";
+
+  for (const auto& entry : std::filesystem::directory_iterator(game_path)) {
+    if (entry.path().extension() == ".scene") {
+      scene_files.push_back(entry.path().filename().string());
+    }
+  }
+  return scene_files;
+}
+
+void Application::draw_editor_windows() {
+  ImGui::Begin("Editor");
+
+  // Create dockspace
+  ImGuiID dockspace_id = ImGui::GetID("EditorDockspace");
+  ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f),
+                   ImGuiDockNodeFlags_PassthruCentralNode);
+
+  // Scene Hierarchy
+  ImGui::Begin("Hierarchy");
+  for (const std::string &scene : scene_files) {
+    if (ImGui::TreeNode(scene.c_str())) {
+      for (const auto& actor : SceneManager::getInstance().copy_of_scene_actors) {
+        if (ImGui::Selectable(actor->name.c_str(),
+                              selected_actor == actor->name)) {
+          selected_actor = actor->name;
+          selected_scene = scene;
+        }
+      }
+      ImGui::TreePop();
+    }
+  }
+  ImGui::End();
+
+  // Assets
+  ImGui::Begin("Assets");
+  // Display assets (e.g., textures, models, audio files)
+  // You can use ImGui::ListBox, ImGui::ImageButton, etc., to display and
+  // interact with assets
+  ImGui::End();
+
+  // Component Properties
+  ImGui::Begin("Properties");
+  if (!selected_actor.empty()) {
+    for (const std::string& scene : scene_files) {
+      if (scene == selected_scene) {
+        for (const auto& actor : SceneManager::getInstance().copy_of_scene_actors) {
+          if (actor->name == selected_actor) {
+            ImGui::Text("Actor: %s", actor->name.c_str());
+            ImGui::Separator();
+
+            for (const auto& component : actor->entity_components_by_type) {
+              if (ImGui::CollapsingHeader(component.first.c_str())) {
+                // Display component properties using ImGui widgets
+                // e.g., ImGui::InputText, ImGui::Checkbox, ImGui::SliderFloat,
+                // etc. based on the component type and its properties
+//                // Example property display
+//                if (component.type == "Transform") {
+//                  // Display transform properties
+//                  static float position[3] = {0.0f, 0.0f, 0.0f};
+//                  ImGui::InputFloat3("Position", position);
+//
+//                  static float rotation[3] = {0.0f, 0.0f, 0.0f};
+//                  ImGui::InputFloat3("Rotation", rotation);
+//
+//                  static float scale[3] = {1.0f, 1.0f, 1.0f};
+//                  ImGui::InputFloat3("Scale", scale);
+//                } else if (component.type == "Mesh") {
+//                  // Display mesh properties
+//                  static char mesh_path[256] = "";
+//                  ImGui::InputText("Mesh Path", mesh_path, sizeof(mesh_path));
+//                }
+//                // Add more component property displays as needed
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  ImGui::End();
+
+  ImGui::End();  // End of Editor window
 }
 
 }  // namespace App

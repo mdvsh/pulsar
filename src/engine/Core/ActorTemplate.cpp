@@ -6,12 +6,14 @@
 #include "ECS.h"
 #include "EngineUtils.h"
 #include "SceneManager.h"
+#include "Core/Resources.hpp"
 
 #include <rapidjson/document.h>
 #include <filesystem>
 
 Actor ActorTemplate::load_actor_template(const std::string& template_name) {
-  const std::string templates_path = "resources/actor_templates";
+  const std::string templates_path =
+      (App::Resources::game_path() / "actor_templates").generic_string();
   const std::string actor_templates_path =
       templates_path + "/" + template_name + ".template";
 

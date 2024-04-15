@@ -39,13 +39,6 @@ FetchContent_Declare(
   GIT_TAG v2.4.1
 )
 
-FetchContent_Declare(
-        glaze
-        GIT_REPOSITORY https://github.com/stephenberry/glaze.git
-        GIT_TAG main
-        GIT_SHALLOW TRUE
-)
-
 # Settings
 
 # For SDL2 to be able to override options
@@ -65,4 +58,4 @@ set(BOX2D_BUILD_DOCS OFF CACHE BOOL  "Build the Box2D documentation" FORCE)
 set(BOX2D_USER_SETTINGS OFF CACHE BOOL  "Override Box2D settings with b2UserSettings.h" FORCE)
 # Populate
 
-FetchContent_MakeAvailable(doctest fmt imgui SDL2 spdlog box2d glaze)
+FetchContent_MakeAvailable(doctest fmt imgui SDL2 spdlog box2d)

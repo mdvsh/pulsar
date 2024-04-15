@@ -7,6 +7,7 @@
 #include "ECS.h"
 #include "Renderer.h"
 #include "SceneManager.h"
+#include "Core/Resources.hpp"
 
 void Actor::LuaOnStart(Actor* actor) {
   for (const auto& [key, component] : actor->entity_components) {
@@ -73,7 +74,7 @@ luabridge::LuaRef Actor::LuaCreateActor(const std::string& template_name) {
     return {L};
 
   // move to helper later
-  const std::string templates_path = "resources/actor_templates";
+  const std::string templates_path = (App::Resources::game_path() / "actor_templates").generic_string();
   const std::string actor_templates_path =
       templates_path + "/" + template_name + ".template";
 
