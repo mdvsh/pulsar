@@ -37,7 +37,11 @@ add_library(${NAME} STATIC
         Core/AudioManager.h
         Core/AudioHelper.h
         Core/Helper.h
-        )
+        Core/UI.cpp
+        Core/UI.h
+        Core/Event.cpp
+        Core/Event.h
+)
 
 # Define set of OS specific files to include
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")

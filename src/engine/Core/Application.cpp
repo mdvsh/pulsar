@@ -98,9 +98,6 @@ ExitStatus App::Application::run() {
                                     m_window->get_native_renderer());
   ImGui_ImplSDLRenderer2_Init(m_window->get_native_renderer());
 
-  scene_files = get_proj_scene_files();
-  size_t selected_scene_index = 0;
-
   const std::string game_config_path =
       (Resources::game_path() / "game.config").generic_string();
   rapidjson::Document game_config;
@@ -133,92 +130,11 @@ ExitStatus App::Application::run() {
     ImGui_ImplSDLRenderer2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
-
-    if (!m_minimized) {
-      ImGui::DockSpaceOverViewport();
-      ImGuiID dockspace_id = ImGui::GetID("MainDockSpace");
-      ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f),
-                       ImGuiDockNodeFlags_PassthruCentralNode);
-
-      if (ImGui::BeginMainMenuBar()) {
-        if (ImGui::BeginMenu("File")) {
-          if (ImGui::MenuItem("Open Project", "Cmd+O")) {
-            open_project();
-          }
-          if (ImGui::MenuItem("Exit", "Cmd+Q")) {
-            stop();
-          }
-          ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("View")) {
-          ImGui::MenuItem("Pulsar", nullptr, &m_show_landing_panel);
-          ImGui::MenuItem("ImGui Demo Panel", nullptr, &m_show_demo_panel);
-          ImGui::MenuItem("Debug Panel", nullptr, &m_show_debug_panel);
-          ImGui::EndMenu();
-        }
-
-        ImGui::EndMainMenuBar();
-      }
-
-      ImGui::Begin("Project");
-      for (size_t i = 0; i < scene_files.size(); ++i) {
-        if (ImGui::Selectable(scene_files[i].c_str(),
-                              i == selected_scene_index)) {
-          selected_scene_index = i;
-        }
-      }
-      ImGui::End();
-
-      if (m_show_landing_panel) {
-        ImGui::SetNextWindowDockID(dockspace_id, ImGuiCond_FirstUseEver);
-        ImGui::SetNextWindowSize(ImVec2(600, 400), ImGuiCond_FirstUseEver);
-        ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(),
-                                ImGuiCond_FirstUseEver, ImVec2(0.5f, 0.5f));
-
-        ImGui::Begin("Welcome to Pulsar!", &m_show_landing_panel,
-                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
-
-        ImGui::Text(
-            "Please open an existing project or create a new one to get "
-            "started...");
-        ImGui::Separator();
-
-        if (ImGui::TreeNode("Useful Resources:")) {
-          ImGui::BulletText("Pulsar Documentation");
-          ImGui::Bullet();
-          ImGui::SmallButton("Lua API Reference");
-          ImGui::SameLine();
-          ImGui::Text("Press me for more info.");
-          ImGui::TreePop();
-        }
-
-        ImGui::End();
-      }
-
-      // ImGUI demo panel
-      if (m_show_demo_panel) {
-        ImGui::ShowDemoWindow(&m_show_demo_panel);
-      }
-
-      // Debug panel
-      if (m_show_debug_panel) {
-        ImGui::Begin("Debug panel", &m_show_debug_panel);
-        ImGui::Text("User config path: %s", user_config_path.c_str());
-        ImGui::Separator();
-        ImGui::Text("Font path: %s", font_path.c_str());
-        ImGui::Text("Font size: %f", font_size);
-        ImGui::Text("Global font scaling %f", io.FontGlobalScale);
-        ImGui::Text("UI scaling factor: %f", font_scaling_factor);
-        ImGui::End();
-      }
+    if (m_ui) {
+      m_ui->renderUI();
     }
 
-    draw_editor_windows();
-    draw_playback_controls();
-
-    // Rendering
     ImGui::Render();
-
     SDL_SetRenderDrawColor(m_window->get_native_renderer(), 100, 100, 100, 255);
     SDL_RenderClear(m_window->get_native_renderer());
     ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
@@ -232,6 +148,10 @@ void App::Application::stop() {
   APP_PROFILE_FUNCTION();
 
   m_running = false;
+}
+void App::Application::subscribe_to_events(
+    const std::function<void(AppEvent&)>& callback) {
+  m_eventCallbacks.push_back(callback);
 }
 
 void Application::on_event(const SDL_WindowEvent& event) {
@@ -267,48 +187,8 @@ void Application::on_close() {
 
   stop();
 }
-void Application::open_project() {
-  APP_DEBUG("trying to open project natively");
-}
-
-std::vector<std::string> Application::get_proj_scene_files() {
-  std::vector<std::string> scene_files;
-  auto game_path = Resources::game_path();
-  game_path /= "scenes";
-
-  for (const auto& entry : std::filesystem::directory_iterator(game_path)) {
-    if (entry.path().extension() == ".scene") {
-      scene_files.push_back(entry.path().filename().string());
-    }
-  }
-  return scene_files;
-}
 
 void Application::draw_editor_windows() {
-  ImGui::Begin("Editor");
-
-  // Create dockspace
-  ImGuiID dockspace_id = ImGui::GetID("EditorDockspace");
-  ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f),
-                   ImGuiDockNodeFlags_PassthruCentralNode);
-
-  // Scene Hierarchy
-  ImGui::Begin("Hierarchy");
-  for (const std::string& scene : scene_files) {
-    if (ImGui::TreeNode(scene.c_str())) {
-      for (const auto& actor :
-           SceneManager::getInstance().copy_of_scene_actors) {
-        if (ImGui::Selectable(actor->name.c_str(),
-                              selected_actor == actor->name)) {
-          selected_actor = actor->name;
-          selected_scene = scene;
-        }
-      }
-      ImGui::TreePop();
-    }
-  }
-  ImGui::End();
-
   // Assets
   ImGui::Begin("Assets");
 
