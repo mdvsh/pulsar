@@ -120,6 +120,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>draw_editor_windows</
 <tr class="memitem:a6eb1c52ed56d6ede18b7d4053cb7fe71"><td class="memItemLeft" align="right" valign="top"><a id="a6eb1c52ed56d6ede18b7d4053cb7fe71"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>draw_playback_controls</b> ()</td></tr>
 <tr class="separator:a6eb1c52ed56d6ede18b7d4053cb7fe71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c4e1cfea149f923a46d8d9206bc9f7b"><td class="memItemLeft" align="right" valign="top"><a id="a2c4e1cfea149f923a46d8d9206bc9f7b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>subscribe_to_events</b> (const std::function&lt; void(AppEvent &amp;)&gt; &amp;callback)</td></tr>
+<tr class="separator:a2c4e1cfea149f923a46d8d9206bc9f7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1eff5e2b3a11bb15280e2caf9585c394"><td class="memItemLeft" align="right" valign="top"><a id="a1eff5e2b3a11bb15280e2caf9585c394"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>notify_event</b> (AppEvent event)</td></tr>
+<tr class="separator:a1eff5e2b3a11bb15280e2caf9585c394"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5ac68d6edf93ca93b48b9691bbfb5b0"><td class="memItemLeft" align="right" valign="top"><a id="aa5ac68d6edf93ca93b48b9691bbfb5b0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_UI</b> (std::unique_ptr&lt; <a class="el" href="classApp_1_1UI.html">UI</a> &gt; ui)</td></tr>
+<tr class="separator:aa5ac68d6edf93ca93b48b9691bbfb5b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3662eeae395766bab3ff4af4cb45751c"><td class="memItemLeft" align="right" valign="top"><a id="a3662eeae395766bab3ff4af4cb45751c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>set_engine_off</b> ()</td></tr>
 <tr class="separator:a3662eeae395766bab3ff4af4cb45751c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -132,12 +141,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>start_game_thread</b>
 <tr class="memitem:ac9b0c17bbfeef6b61fd5b0a5f27a9a3b"><td class="memItemLeft" align="right" valign="top"><a id="ac9b0c17bbfeef6b61fd5b0a5f27a9a3b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>stop_game_thread</b> ()</td></tr>
 <tr class="separator:ac9b0c17bbfeef6b61fd5b0a5f27a9a3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a659801c1f6d13dae71227f9beaa3bd79"><td class="memItemLeft" align="right" valign="top"><a id="a659801c1f6d13dae71227f9beaa3bd79"></a>
+std::vector&lt; std::function&lt; void(AppEvent &amp;)&gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_event_callbacks</b> ()</td></tr>
+<tr class="separator:a659801c1f6d13dae71227f9beaa3bd79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a05fc8408f663cbea1c6370628f8877c8"><td class="memItemLeft" align="right" valign="top"><a id="a05fc8408f663cbea1c6370628f8877c8"></a>
+<tr class="memitem:ac48dfd8082a7fce6d4d24b2840dc413c"><td class="memItemLeft" align="right" valign="top"><a id="ac48dfd8082a7fce6d4d24b2840dc413c"></a>
 static std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_proj_scene_files</b> ()</td></tr>
-<tr class="separator:a05fc8408f663cbea1c6370628f8877c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ac48dfd8082a7fce6d4d24b2840dc413c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31a91f991aa3d36961c2f496b033484f"><td class="memItemLeft" align="right" valign="top"><a id="a31a91f991aa3d36961c2f496b033484f"></a>
 static std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>LoadComponentTemplates</b> ()</td></tr>
 <tr class="separator:a31a91f991aa3d36961c2f496b033484f"><td class="memSeparator" colspan="2">&#160;</td></tr>
