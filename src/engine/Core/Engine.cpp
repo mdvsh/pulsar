@@ -9,6 +9,7 @@
 #include "EngineUtils.h"
 #include "EventBus.h"
 #include "InputManager.h"
+#include "Helper.h"
 
 void Engine::initialize() {
   const std::string game_config_path =
@@ -33,10 +34,12 @@ void Engine::initialize() {
 // }
 
 void Engine::stop_game() {
+  initialize();
   set_engine_off();
 }
 
 void Engine::run_game() {
+  initialize();
   if (not engine_running) {
     engine_running = true;
   }

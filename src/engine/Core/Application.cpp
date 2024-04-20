@@ -3,7 +3,6 @@
 #include <SDL2/SDL.h>
 #include "SDL2_image/SDL_image.h"
 
-
 #include <rapidjson/document.h>
 
 #include <backends/imgui_impl_sdl2.h>
@@ -13,9 +12,10 @@
 #include <memory>
 #include <string>
 
-#include "Core/Engine.h"
 #include "Core/DPIHandler.hpp"
 #include "Core/Debug/Instrumentor.hpp"
+#include "Core/Engine.h"
+#include "Core/ResourceManager.h"
 #include "Core/EngineUtils.h"
 #include "Core/Log.hpp"
 #include "Core/Resources.hpp"
@@ -38,7 +38,7 @@ Application::Application(const std::string& title) {
   int imgFlags = IMG_INIT_PNG;
   if (!(IMG_Init(imgFlags) & imgFlags)) {
     APP_ERROR("SDL_image could not initialize! SDL_image Error: %s\n",
-           IMG_GetError());
+              IMG_GetError());
   }
   TTF_Init();
 
@@ -92,19 +92,6 @@ ExitStatus App::Application::run() {
                                     m_window->get_native_renderer());
   ImGui_ImplSDLRenderer2_Init(m_window->get_native_renderer());
 
-  Engine::getInstance().initialize();
-
-//  const auto image_path = (Resources::game_path() / "images/").generic_string();
-//  SDL_Surface *box = IMG_Load((image_path + "box1.png").c_str());
-//  if (box == nullptr) {
-//    APP_ERROR("Error loading image: %s\n", IMG_GetError());
-//  }
-//  SDL_Texture *box_texture = SDL_CreateTextureFromSurface(m_window->get_native_renderer(), box);
-//  SDL_FreeSurface(box);
-//  int texW, texH;
-//  SDL_QueryTexture(box_texture, NULL, NULL, &texW, &texH);
-//  SDL_Rect dstRect = { 0, 0, texW, texH };
-
   m_running = true;
   while (m_running) {
     APP_PROFILE_SCOPE("MainLoop");
@@ -136,7 +123,6 @@ ExitStatus App::Application::run() {
     SDL_SetRenderDrawColor(m_window->get_native_renderer(), 100, 100, 100, 255);
     SDL_RenderClear(m_window->get_native_renderer());
     ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
-//    SDL_RenderCopy(m_window->get_native_renderer(), box_texture, NULL, &dstRect);
     SDL_RenderPresent(m_window->get_native_renderer());
   }
 

@@ -1,48 +1,70 @@
 GameManager = {
-	num_enemies = 10,
-	base_enemy_movement_speed = -1.5,
+
+	-- TILE CODES --
+	-- 0 : nothing
+	-- 1 : Static box
+	-- 2 : player
+
+	stage1 = {
+		{1, 0, 0, 0, 0, 4, 4, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, -- 20x20
+		{1, 0, 0, 0, 0, 4, 4, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 4, 4, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 3, 3, 1, 1, 1, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1},
+		{1, 0, 2, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1},
+		{1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+		{1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
+		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1},
+	},
 
 	OnStart = function(self)
-		math.randomseed(494)
+		-- Spawn stage
+		for y=1,20 do 
+			for x = 1,20 do
+				local tile_code = self.stage1[y][x]
+				local tile_pos = Vector2(x, y)
 
-		-- Establish necessary references.
-		self.donna = Actor.Find("donna"):GetComponent("Donna")
+				if tile_code == 2 then
+					local new_player = Actor.Instantiate("Player")
+					local new_player_rb = new_player:GetComponent("Rigidbody")
+					new_player_rb.x = tile_pos.x
+					new_player_rb.y = tile_pos.y
+				
+				elseif tile_code == 1 then
+					local new_box = Actor.Instantiate("KinematicBox")
+					local new_box_rb = new_box:GetComponent("Rigidbody")
+					new_box_rb.x = tile_pos.x
+					new_box_rb.y = tile_pos.y
 
-		-- Establish global collections.
-		if all_enemies == nil then
-			all_enemies = {}
+				elseif tile_code == 3 then
+					local new_box = Actor.Instantiate("BouncyBox")
+					local new_box_rb = new_box:GetComponent("Rigidbody")
+					new_box_rb.x = tile_pos.x
+					new_box_rb.y = tile_pos.y
+				
+				elseif tile_code == 4 then
+					local new_box = Actor.Instantiate("VictoryBox")
+					local new_box_rb = new_box:GetComponent("Rigidbody")
+					new_box_rb.x = tile_pos.x
+					new_box_rb.y = tile_pos.y
+				end
+			end
 		end
-
-		if all_projectiles == nil then
-			all_projectiles = {}
-		end
-
-		score = 0
-
-		game_over = false
 	end,
 
 	OnUpdate = function(self)
-		self.base_enemy_movement_speed = self.base_enemy_movement_speed - 0.001
-
-		if Application.GetFrame() % 60 == 0 and not game_over then
-			self:SpawnEnemy()
-		end
-	end,
-
-	SpawnEnemy = function(self)
-		local new_enemy = Actor.Instantiate("Enemy")
-		local enemy_transform = new_enemy:GetComponent("Transform")
-
-		-- Determine random sprite.
-		local possible_sprites = { "enemy1", "enemy2", "enemy3" }
-		local chosen_sprite = possible_sprites[ math.random(1, #possible_sprites) ]
-		new_enemy:GetComponent("SpriteRenderer").sprite = chosen_sprite
-		new_enemy:GetComponent("ConstantMovement").x_vel = self.base_enemy_movement_speed + math.random() * -1.0
-
-		-- Determine random position.
-		enemy_transform.x = 700 + math.random() * 200
-		enemy_transform.y = 50 + math.random() * 250
+		
 	end
 }
 

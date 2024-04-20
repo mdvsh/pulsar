@@ -26,15 +26,6 @@ class UI {
   void drawPlaybackControls();
 
   void onQuitEvent();
-  void set_proj_scene_files() {
-    auto scene_path = Resources::game_path();
-    scene_path /= "scenes";
-    for (const auto& entry : std::filesystem::directory_iterator(scene_path)) {
-      if (entry.path().extension() == ".scene") {
-        scene_files.insert(entry.path().filename().string());
-      }
-    }
-  }
 
  private:
   bool m_show_landing_panel{true};
@@ -44,7 +35,6 @@ class UI {
   size_t selected_scene_index{0};
   std::string selected_actor;
   std::string selected_scene;
-  std::unordered_set<std::string> scene_files;
   ImGuiID dockspace_id{};
   std::vector<std::string> scene_actors;
   std::string resources_path_str = Resources::game_path().generic_string();

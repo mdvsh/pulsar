@@ -28,7 +28,7 @@ class Engine {
   void set_engine_off() {
     if (engine_running) {
       engine_running = false;
-      SDL_HideWindow(Renderer::getInstance().get_game_window());  
+      SDL_HideWindow(Renderer::getInstance().get_game_window());
     }
   }
 

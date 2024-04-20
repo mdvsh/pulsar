@@ -283,7 +283,7 @@ class Helper {
         recording_file << frame_number << ";";
 
         /* Each frame may have multiple events we need to package up. */
-        for (int i = 0; i < relevant_events.size(); i++) {
+        for (size_t i = 0; i < relevant_events.size(); i++) {
           /* Every event begins with an event type */
           Uint32 event_type = relevant_events[i].type;
           recording_file << event_type << ",";

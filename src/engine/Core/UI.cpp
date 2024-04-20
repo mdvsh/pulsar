@@ -5,10 +5,10 @@
 #include "UI.h"
 #include "Core/SceneManager.h"
 #include "Core/Engine.h"
+#include "Core/ResourceManager.h"
 
 namespace App {
 void UI::renderUI() {
-  set_proj_scene_files();
   drawToolbar();
   ImGui::Begin("Editor");
   drawEditorPane();
@@ -32,6 +32,7 @@ void UI::drawToolbar() {
       }
       if (ImGui::MenuItem("Exit", "Cmd+Q")) {
         // stop();
+        SDL_Quit();
       }
       ImGui::EndMenu();
     }
@@ -47,7 +48,9 @@ void UI::drawToolbar() {
   // -----next-----
 
   ImGui::Begin("Project");
-  for (const std::string& scene : scene_files) {
+  const std::vector<std::string> scenes =
+      ResourceManager::getInstance().getScenes();
+  for (const std::string& scene : scenes) {
     if (ImGui::Selectable(scene.c_str(), scene == selected_scene)) {
       selected_scene = scene;
     }
@@ -87,7 +90,8 @@ void UI::drawEditorPane() {
                    ImGuiDockNodeFlags_PassthruCentralNode);
 
   ImGui::Begin("Hierarchy");
-  for (const std::string& scene : scene_files) {
+  const std::vector<std::string> scenes = ResourceManager::getInstance().getScenes();
+  for (const std::string& scene : scenes) {
     if (ImGui::TreeNode(scene.c_str())) {
       for (const auto& actor :
            SceneManager::getInstance().copy_of_scene_actors) {
@@ -105,31 +109,11 @@ void UI::drawEditorPane() {
 
 void UI::drawAssetsPane() {
   ImGui::Begin("Assets");
-  static std::vector<std::string> asset_paths;
-  static std::vector<std::string> asset_names;
-  // static std::vector<ImTextureID> asset_thumbnails;
-  if (asset_paths.empty()) {
-    std::vector<std::string> supported_extensions = {".png", ".jpg", ".jpeg",
-                                                     ".bmp", ".wav", ".mp3"};
-    for (const auto& entry :
-         std::filesystem::recursive_directory_iterator(resources_path)) {
-      if (entry.is_regular_file()) {
-        std::string extension = entry.path().extension().string();
-        std::transform(extension.begin(), extension.end(), extension.begin(),
-                       ::tolower);
-
-        if (std::find(supported_extensions.begin(), supported_extensions.end(),
-                      extension) != supported_extensions.end()) {
-          asset_paths.push_back(entry.path().string());
-          asset_names.push_back(entry.path().filename().string());
-        }
-      }
-    }
-  }
+  std::vector<std::string> asset_names = ResourceManager::getInstance().getMedia();
 
   static int selected_asset = -1;
   ImGui::BeginChild("AssetThumbnails", ImVec2(200, 0), true);
-  for (size_t i = 0; i < asset_paths.size(); ++i) {
+  for (size_t i = 0; i < asset_names.size(); ++i) {
     // if (asset_thumbnails[i]) {
     //   ImGui::ImageButton(asset_thumbnails[i], ImVec2(64, 64));
     // } else {
@@ -160,7 +144,9 @@ void UI::drawAssetsPane() {
 void UI::drawCompPropsPane() {
   ImGui::Begin("Properties");
   if (!selected_actor.empty()) {
-    for (const std::string& scene : scene_files) {
+    const std::vector<std::string> scenes =
+        ResourceManager::getInstance().getScenes();
+    for (const std::string& scene : scenes) {
       if (scene == selected_scene) {
         for (const auto& actor :
              SceneManager::getInstance().copy_of_scene_actors) {

@@ -41,6 +41,8 @@ add_library(${NAME} STATIC
         Core/UI.h
         Core/Event.cpp
         Core/Event.h
+        Core/ResourceManager.cpp
+        Core/ResourceManager.h
 )
 
 # Define set of OS specific files to include
