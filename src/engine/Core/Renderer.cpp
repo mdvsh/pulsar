@@ -59,7 +59,7 @@ void Renderer::initialize(const rapidjson::Document& game_config) {
       CAMERA_EASE_FACTOR = rendering_config["cam_ease_factor"].GetFloat();
   }
 
-  const auto g_settings = App::Window::Settings{game_title, WINDOW_WIDTH, WINDOW_HEIGHT, false}; 
+  const auto g_settings = App::Window::Settings{game_title, WINDOW_WIDTH, WINDOW_HEIGHT, false};
   m_window = std::make_unique<App::Window>(g_settings);
   m_window->set_id();
   
@@ -363,10 +363,10 @@ void Renderer::cache_texture(const std::string& image_name) {
   const auto& renderer = getInstance();
   const std::string image_path = renderer.IMAGES_PATH + image_name + ".png";
   if (std::filesystem::exists(image_path)) {
-    SDL_Texture* image_texture = IMG_LoadTexture(renderer.get_sdl_renderer(), image_path.c_str());
+    SDL_Surface* image_surface = IMG_Load(image_path.c_str());
+    SDL_Texture *image_texture = SDL_CreateTextureFromSurface(renderer.get_sdl_renderer(), image_surface);
     if (image_texture == nullptr) {
       std::cerr << "Error loading texture " << image_name << ": " << IMG_GetError() << std::endl;
-      // Handle the error or decide whether to exit the application
     } else {
       textures[image_name] = image_texture;
     }

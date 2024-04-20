@@ -89,9 +89,9 @@ class Renderer {
       }
     }
     font_cache.clear();
-//
-//    SDL_DestroyRenderer(sdl_renderer);
-//    SDL_DestroyWindow(game_window);
+
+    SDL_DestroyRenderer(sdl_renderer);
+    SDL_DestroyWindow(game_window);
   }
 
   [[nodiscard]] float get_zoom_factor() const { return ZOOM_FACTOR; }
