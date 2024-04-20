@@ -3,109 +3,66 @@
 //
 
 #include "Engine.h"
+#include <rapidjson/document.h>
 #include "AudioHelper.h"
 #include "CameraManager.h"
 #include "EngineUtils.h"
 #include "EventBus.h"
 #include "InputManager.h"
-#include <rapidjson/document.h>
 
-void Engine::load_initial_settings() {
-  const std::string resources_path = "resources/";
-  const std::string game_config_path = resources_path + "game.config";
-  const std::string rendering_config_path = resources_path + "rendering.config";
-
-  if (!std::filesystem::exists(resources_path)) {
-    std::cout << "error: resources/ missing";
-    std::exit(0);
-  }
-  if (!std::filesystem::exists(game_config_path)) {
-    std::cout << "error: resources/game.config missing";
-    std::exit(0);
-  }
-
-  if (std::filesystem::exists(rendering_config_path)) {
-    rapidjson::Document rendering_config_document;
-    EngineUtils::ReadJsonFile(rendering_config_path, rendering_config_document);
-    if (const int camera_width = EngineUtils::LoadIntFromJson(
-            rendering_config_document, "x_resolution");
-        camera_width != 0) {
-      CAMERA_WIDTH = camera_width;
-    }
-    if (const int camera_height = EngineUtils::LoadIntFromJson(
-            rendering_config_document, "y_resolution");
-        camera_height != 0) {
-      CAMERA_HEIGHT = camera_height;
-    }
-  }
-}
-
-void Engine::run_game() {
-  const std::string game_config_path = "resources/game.config";
+void Engine::initialize() {
+  const std::string game_config_path =
+      (App::Resources::game_path() / "game.config").generic_string();
   rapidjson::Document game_config;
   EngineUtils::ReadJsonFile(game_config_path, game_config);
-  
+
   Renderer& renderer = Renderer::getInstance();
   SceneManager& scene_manager = SceneManager::getInstance();
 
   renderer.initialize(game_config);
-  CameraManager::initialize();
-
   scene_manager.initialize(game_config);
-
+  CameraManager::initialize();
   AudioManager::initialize();
   AudioManager::start_intro_music(game_config);
   InputManager::InitKeyToScancodeMap();
-
-  renderer.load_intro_images(game_config);
-  renderer.load_intro_texts(game_config);
-
-  renderer.set_showed_intro();
   InputManager::Init();
+}
+
+// void Engine::run_game() {
+//   m_game_thread = std::thread(&Engine::game_loop, this);
+// }
+
+void Engine::stop_game() {
+  set_engine_off();
+}
+
+void Engine::run_game() {
+  if (not engine_running) {
+    engine_running = true;
+  }
+
+  Renderer& renderer = Renderer::getInstance();
+  SceneManager& scene_manager = SceneManager::getInstance();
+
   while (engine_running) {
-    SDL_Event input_event;
-    while (Helper::SDL_PollEvent498(&input_event)) {
-      InputManager::ProcessEvent(input_event);
+    SDL_Event input_event{};
+    while (SDL_PollEvent(&input_event)) {
       if (input_event.type == SDL_QUIT) {
         set_engine_off();
-        // continue; ?
       }
-      if (not renderer.get_showed_intro()) {
-        // not showed intro input parsing
-        if (input_event.type == SDL_MOUSEBUTTONDOWN &&
-            input_event.button.button == SDL_BUTTON_LEFT) {
-          renderer.increment_intro_screen_index();
-          if (const size_t current_index = renderer.get_intro_image_index();
-              current_index >= renderer.get_image_count() and
-              current_index >= renderer.get_text_count()) {
-            renderer.set_showed_intro(std::optional<bool>(true));
-          }
-          continue;
-        }
-        if (InputManager::GetKeyDown("space") ||
-            InputManager::GetKeyDown("return")) {
-          renderer.increment_intro_screen_index();
-          if (const size_t current_index = renderer.get_intro_image_index();
-              current_index >= renderer.get_image_count() &&
-              current_index >= renderer.get_text_count()) {
-            renderer.set_showed_intro(std::optional<bool>(true));
-          }
-        }
+      if (input_event.window.windowID == renderer.m_window->get_id()) {
+        on_game_window_event(input_event.window);
+        InputManager::ProcessEvent(input_event);
       }
     }
     SDL_RenderClear(renderer.get_sdl_renderer());
-    if (not renderer.get_showed_intro()) {
-      renderer.render_intro();
-    } else {
-      AudioManager::stop_intro_music();
 
-      scene_manager.update_scene_actors();
+    scene_manager.update_scene_actors();
 
-      if (SceneManager::latest_scene_change_request) {
-        scene_manager.trigger_scene_change(
-            *SceneManager::latest_scene_change_request);
-        SceneManager::latest_scene_change_request.reset();
-      }
+    if (SceneManager::latest_scene_change_request) {
+      scene_manager.trigger_scene_change(
+          *SceneManager::latest_scene_change_request);
+      SceneManager::latest_scene_change_request.reset();
     }
 
     App::EventBus::ProcessPendingSubscriptions();
@@ -120,7 +77,19 @@ void Engine::run_game() {
 
     SDL_RenderPresent(renderer.get_sdl_renderer());
   }
-  SDL_DestroyRenderer(renderer.get_sdl_renderer());
-  SDL_DestroyWindow(renderer.get_game_window());
-  SDL_Quit();
+}
+
+void Engine::on_game_window_event(const SDL_WindowEvent& event) {
+
+  switch (event.event) {
+    case SDL_WINDOWEVENT_CLOSE:
+      return set_engine_off();
+    // case SDL_WINDOWEVENT_MINIMIZED:
+    //   return on_minimize();
+    // case SDL_WINDOWEVENT_SHOWN:
+    //   return on_shown();
+    default:
+      // Do nothing otherwise
+      return;
+  }
 }

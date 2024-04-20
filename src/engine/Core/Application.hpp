@@ -42,25 +42,9 @@ class Application {
   void draw_playback_controls();
   static std::vector<std::string> get_proj_scene_files();
   static std::vector<std::string> LoadComponentTemplates();
-  void subscribe_to_events(const std::function<void(AppEvent&)>& callback);
-  void notify_event(AppEvent event);
 
   void set_UI(std::unique_ptr<UI> ui) {
     m_ui = std::move(ui);
-  }
-
-  void set_engine_off() {
-    if (is_game_running)
-      is_game_running = false;
-  }
-
-  void run_game_thread();
-  std::thread game_thread;
-  void start_game_thread();
-  void stop_game_thread();
-
-  std::vector<std::function<void(AppEvent&)>> get_event_callbacks() {
-    return m_eventCallbacks;
   }
 
   std::vector<std::string> scene_files;
@@ -77,16 +61,7 @@ class Application {
 
   AppEvent m_app_event{AppEvent::NOTIFY};
 
-  std::atomic<bool> is_game_running{false};
-  std::atomic<bool> is_game_paused{false};
-  std::atomic<bool> is_game_over{false};
-  std::atomic<bool> is_game_won{false};
-  std::mutex game_mutex;
-  std::condition_variable game_cv;
-
-  std::queue<std::string> scene_change_queue;
   std::vector<std::string> actor_templates;
-  std::vector<std::function<void(AppEvent&)>> m_eventCallbacks;
 };
 
 }  // namespace App

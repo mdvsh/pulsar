@@ -6,8 +6,8 @@ add_library(${NAME} STATIC
   Core/Log.cpp Core/Log.hpp Core/Debug/Instrumentor.hpp
   Core/Application.cpp Core/Application.hpp Core/Window.cpp Core/Window.hpp
   Core/Resources.hpp Core/DPIHandler.hpp
-        # Core/Engine.cpp
-        # Core/Engine.h
+        Core/Engine.cpp
+        Core/Engine.h
         Core/Renderer.cpp
         Core/Renderer.h
         Core/SceneManager.cpp

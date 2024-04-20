@@ -59,22 +59,16 @@ void Renderer::initialize(const rapidjson::Document& game_config) {
       CAMERA_EASE_FACTOR = rendering_config["cam_ease_factor"].GetFloat();
   }
 
-  const auto g_window = SDL_CreateWindow(
-      game_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-      WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
-
-  const auto g_renderer = SDL_CreateRenderer(
-      g_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-
-  IMG_Init(IMG_INIT_PNG);
-  TTF_Init();
-
-  SDL_SetRenderDrawColor(g_renderer, clear_color_r, clear_color_g,
+  const auto g_settings = App::Window::Settings{game_title, WINDOW_WIDTH, WINDOW_HEIGHT, false}; 
+  m_window = std::make_unique<App::Window>(g_settings);
+  m_window->set_id();
+  
+  SDL_SetRenderDrawColor(m_window->get_native_renderer(), clear_color_r, clear_color_g,
                          clear_color_b, 255);
-  SDL_RenderClear(g_renderer);
+  SDL_RenderClear(m_window->get_native_renderer());
 
-  set_sdl_renderer(g_renderer);
-  set_game_window(g_window);
+  set_sdl_renderer(m_window->get_native_renderer());
+  set_game_window(m_window->get_native_window());
 }
 
 void Renderer::render_HUD(const int health, const int score) {
@@ -315,9 +309,10 @@ void Renderer::service_text_render_requests() {
     if (font_cache.count(font) > 0 and font_cache[font].count(size) > 0) {
       ttf_font = font_cache[font][size];
     } else {
-      if (std::filesystem::exists("resources/fonts/" + font + ".ttf")) {
+      const std::string font_path = FONTS_PATH + font + ".ttf";
+      if (std::filesystem::exists(font_path)) {
         ttf_font =
-            TTF_OpenFont(("resources/fonts/" + font + ".ttf").c_str(), size);
+            TTF_OpenFont((font_path).c_str(), size);
         font_cache[font][size] = ttf_font;
       } else {
         std::cout << "error: font " << font << " missing";
@@ -368,9 +363,13 @@ void Renderer::cache_texture(const std::string& image_name) {
   const auto& renderer = getInstance();
   const std::string image_path = renderer.IMAGES_PATH + image_name + ".png";
   if (std::filesystem::exists(image_path)) {
-    SDL_Texture* image_texture =
-        IMG_LoadTexture(renderer.get_sdl_renderer(), image_path.c_str());
-    textures[image_name] = image_texture;
+    SDL_Texture* image_texture = IMG_LoadTexture(renderer.get_sdl_renderer(), image_path.c_str());
+    if (image_texture == nullptr) {
+      std::cerr << "Error loading texture " << image_name << ": " << IMG_GetError() << std::endl;
+      // Handle the error or decide whether to exit the application
+    } else {
+      textures[image_name] = image_texture;
+    }
   } else {
     std::cout << "error: missing image " << image_name;
     std::exit(0);

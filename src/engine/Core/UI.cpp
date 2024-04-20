@@ -4,6 +4,7 @@
 
 #include "UI.h"
 #include "Core/SceneManager.h"
+#include "Core/Engine.h"
 
 namespace App {
 void UI::renderUI() {
@@ -14,6 +15,7 @@ void UI::renderUI() {
   drawAssetsPane();
   drawCompPropsPane();
   drawNewCompPane();
+  drawPlaybackControls();
   ImGui::End();
 }
 
@@ -291,6 +293,25 @@ void UI::drawNewCompPane() {
     }
   }
 }
-void UI::drawCenterPane() {}
+
+void UI::drawPlaybackControls() {
+    ImGui::Begin("Playback Controls");
+
+  if (ImGui::Button("Play")) {
+    Engine::getInstance().run_game();
+  }
+  ImGui::SameLine();
+
+  if (ImGui::Button("Pause")) {
+    // is_game_paused = true;
+  }
+  ImGui::SameLine();
+
+  if (ImGui::Button("Stop")) {
+    Engine::getInstance().stop_game();
+  }
+
+  ImGui::End();
+}
 
 }  // namespace App

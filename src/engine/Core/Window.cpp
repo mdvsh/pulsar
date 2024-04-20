@@ -12,7 +12,8 @@ Window::Window(const Settings& settings) {
   APP_PROFILE_FUNCTION();
 
   const auto window_flags{
-      static_cast<SDL_WindowFlags>(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI)};
+      static_cast<SDL_WindowFlags>(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI |
+                                   (settings.is_hidden ? SDL_WINDOW_HIDDEN : SDL_WINDOW_SHOWN))};
   const WindowSize size{DPIHandler::get_dpi_aware_window_size(settings)};
 
   m_window = SDL_CreateWindow(settings.title.c_str(),
@@ -25,6 +26,7 @@ Window::Window(const Settings& settings) {
   auto renderer_flags{
       static_cast<SDL_RendererFlags>(SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED)};
   m_renderer = SDL_CreateRenderer(m_window, -1, renderer_flags);
+  m_ID = SDL_GetWindowID(m_window);
 
   if (m_renderer == nullptr) {
     APP_ERROR("Error creating SDL_Renderer!");

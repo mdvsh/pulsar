@@ -23,6 +23,7 @@ class UI {
   void drawNewCompPane();
   void drawToolbar();
   void drawCenterPane();
+  void drawPlaybackControls();
 
   void onQuitEvent();
   void set_proj_scene_files() {

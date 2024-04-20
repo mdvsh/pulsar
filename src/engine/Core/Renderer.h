@@ -9,6 +9,7 @@
 #include <SDL2_image/SDL_image.h>
 #include <SDL2_ttf/SDL_ttf.h>
 #include "Core/Resources.hpp"
+#include "Core/Window.hpp"
 
 // clang-format off
 #include "lua.hpp"
@@ -55,7 +56,8 @@ class Renderer {
 
   bool showed_intro = false;
   // const std::string IMAGES_PATH = "resources/images/";
-  const std::string IMAGES_PATH = (App::Resources::game_path() / "images").generic_string();
+  const std::string IMAGES_PATH = (App::Resources::game_path() / "images/").generic_string();
+  const std::string FONTS_PATH = (App::Resources::game_path() / "fonts/").generic_string();
 
  public:
   Renderer(const Renderer&) = delete;
@@ -80,6 +82,16 @@ class Renderer {
       SDL_DestroyTexture(texture.second);
     }
     textures.clear();
+
+    for (auto& font : font_cache) {
+      for (auto& font_size : font.second) {
+        TTF_CloseFont(font_size.second);
+      }
+    }
+    font_cache.clear();
+//
+//    SDL_DestroyRenderer(sdl_renderer);
+//    SDL_DestroyWindow(game_window);
   }
 
   [[nodiscard]] float get_zoom_factor() const { return ZOOM_FACTOR; }
@@ -88,6 +100,7 @@ class Renderer {
     return CAMERA_EASE_FACTOR;
   }
 
+  std::unique_ptr<App::Window> m_window{nullptr};
   SDL_Renderer* sdl_renderer = nullptr;
   [[nodiscard]] SDL_Renderer* get_sdl_renderer() const { return sdl_renderer; }
   void set_sdl_renderer(SDL_Renderer* renderer) { sdl_renderer = renderer; }

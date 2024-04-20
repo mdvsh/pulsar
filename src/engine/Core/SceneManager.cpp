@@ -17,7 +17,7 @@
 std::optional<std::string> SceneManager::latest_scene_change_request =
     std::nullopt;
 
-void SceneManager::initialize(const rapidjson::Document& game_config) {
+void SceneManager::initialize(const rapidjson::Document& game_config) {  
   const std::string initial_scene =
       EngineUtils::LoadStringFromJson(game_config, "initial_scene");
   if (initial_scene.empty()) {
