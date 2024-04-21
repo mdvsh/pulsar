@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['imgrenderrequest_17',['IMGRenderRequest',['../structIMGRenderRequest.html',1,'']]],
-  ['inputmanager_18',['InputManager',['../classInputManager.html',1,'']]]
+  ['glyph_18',['Glyph',['../structTextEditor_1_1Glyph.html',1,'TextEditor']]]
 ];

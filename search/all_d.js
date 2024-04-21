@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['window_35',['Window',['../classApp_1_1Window.html',1,'App']]],
-  ['windowsize_36',['WindowSize',['../structApp_1_1WindowSize.html',1,'App']]]
+  ['texteditor_39',['TextEditor',['../classTextEditor.html',1,'']]],
+  ['textrenderrequest_40',['TextRenderRequest',['../structTextRenderRequest.html',1,'']]]
 ];

@@ -122,13 +122,13 @@ $(function() {
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordflow">return</span> m_media_names;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  }</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="comment">// [[nodiscard]] std::shared_ptr&lt;SceneData&gt; getScene(const std::string&amp; name) {</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="comment">//   return m_scenes[name];</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="comment">// }</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  [[nodiscard]] std::shared_ptr&lt;SceneData&gt; getScene(<span class="keyword">const</span> std::string&amp; name) {</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">return</span> m_scenes[name];</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  }</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="comment">// [[nodiscard]] std::shared_ptr&lt;MediaData&gt; getMedia(const std::string&amp; name) {</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="comment">//   return m_media[name];</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="comment">// }</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  [[nodiscard]] std::shared_ptr&lt;MediaData&gt; getMedia(<span class="keyword">const</span> std::string&amp; name) {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">return</span> m_media[name];</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  }</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  std::unordered_map&lt;std::string, std::shared_ptr&lt;SceneData&gt;&gt; m_scenes;</div>
