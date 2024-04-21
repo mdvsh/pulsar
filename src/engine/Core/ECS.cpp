@@ -25,6 +25,14 @@ void ECS::initialize() {
   initialize_functions();
 }
 
+void ECS::reset() {
+  if (lua_state != nullptr) {
+    lua_close(lua_state);
+    lua_state = nullptr;
+  }
+  component_registry.clear();
+}
+
 void ECS::initialize_state() {
   lua_state = luaL_newstate();
   luaL_openlibs(lua_state);

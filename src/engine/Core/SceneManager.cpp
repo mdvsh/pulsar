@@ -46,6 +46,33 @@ void SceneManager::initialize(const rapidjson::Document& game_config) {
   current_scene_name = initial_scene;
 }
 
+void SceneManager::reset() {
+  scene_actors.clear();
+  copy_of_scene_actors.clear();
+  actors_by_name.clear();
+  actor_booted_component_keys.clear();
+  jit_created_actors_map.clear();
+  source_of_scene_persisting_actors.clear();
+  ids_of_scene_persisting_actors.clear();
+  late_update_components.clear();
+  to_be_removed_actor_components.clear();
+  jit_instantiated_actors.clear();
+  victim_actors_this_frame.clear();
+  
+  if (phys_world_initialized) {
+    delete phys_world;
+    phys_world_initialized = false;
+  }
+
+  if (not actor_templates_map.empty()) {
+    actor_templates_map.clear();
+  }
+
+  App::ECS::getInstance().reset();
+
+  // can just call initialize now...
+}
+
 void SceneManager::trigger_scene_change(const std::string& scene_name) {
   const std::string scene_path = "resources/scenes/" + scene_name + ".scene";
   if (not std::filesystem::exists(scene_path)) {

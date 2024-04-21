@@ -43,6 +43,8 @@ add_library(${NAME} STATIC
         Core/Event.h
         Core/ResourceManager.cpp
         Core/ResourceManager.h
+        # Core/Editor.cpp
+        # Core/Editor.h
 )
 
 # Define set of OS specific files to include
@@ -59,6 +61,7 @@ endif ()
 
 target_include_directories(${NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(${NAME} PUBLIC ${CMAKE_SOURCE_DIR}/vendor)
+# target_include_directories(${NAME} PUBLIC ${CMAKE_SOURCE_DIR}/vendor/zep/include)
 target_compile_features(${NAME} PRIVATE cxx_std_20)
 
 find_package(Lua REQUIRED)
@@ -77,5 +80,11 @@ target_link_libraries(${NAME}
   PUBLIC ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARIES}
   ${LUA_LIBRARIES}
 )
+
+# if(ZEP_LIB)
+#   target_link_libraries(${NAME} PRIVATE Zep::Zep)
+# else()
+#   target_compile_definitions(${NAME} PRIVATE ZEP_SINGLE_HEADER=1)
+# endif()
 
 add_subdirectory(Tests)

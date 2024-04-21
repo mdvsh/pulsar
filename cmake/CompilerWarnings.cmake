@@ -12,7 +12,7 @@ function(set_project_warnings project_name)
     # 'type2:field_bits', possible loss of data
     /w14263 # 'function': member function does not override any base class
     # virtual member function
-    /w14265 # 'classname': class has virtual functions, but destructor is not
+    # /w14265 # 'classname': class has virtual functions, but destructor is not
     # virtual instances of this class may not be destructed correctly
     /w14287 # 'operator': unsigned/negative constant mismatch
     /we4289 # nonstandard extension used: 'variable': loop control variable
@@ -43,11 +43,11 @@ function(set_project_warnings project_name)
     -Wextra # reasonable and standard
     -Wshadow # warn the user if a variable declaration shadows one from a
     # parent context
-    -Wnon-virtual-dtor # warn the user if a class with virtual functions has a
+    # -Wnon-virtual-dtor # warn the user if a class with virtual functions has a
     # non-virtual destructor. This helps catch hard to
     # track down memory errors
     -Wcast-align # warn for potential performance problem casts
-    -Wunused # warn on anything being unused
+    # -Wunused # warn on anything being unused
     -Woverloaded-virtual # warn if you overload (not override) a virtual
     # function
     -Wpedantic # warn if non-standard C++ is used

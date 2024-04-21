@@ -50,6 +50,7 @@ class ECS {
   const std::filesystem::path COMPONENTS_DIR = Resources::game_path() / "component_types";
 
   void initialize();
+  void reset();
   void initialize_state();
   void initialize_component_registry();
   void initialize_functions();

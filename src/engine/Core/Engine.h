@@ -23,11 +23,13 @@ class Engine {
   void run_game();
   void stop_game();
 
+  void reset();
+
   void on_game_window_event(const SDL_WindowEvent& event);
 
   void set_engine_off() {
     if (engine_running) {
-      engine_running = false;
+      reset();
       SDL_HideWindow(Renderer::getInstance().get_game_window());
     }
   }

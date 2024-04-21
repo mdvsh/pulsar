@@ -11,6 +11,7 @@
 #include <unordered_set>
 #include "Core/Log.hpp"
 #include "Core/Resources.hpp"
+#include "Core/Editor.h"
 
 namespace App {
 
@@ -31,6 +32,7 @@ class UI {
   bool m_show_landing_panel{true};
   bool m_show_debug_panel{false};
   bool m_show_demo_panel{false};
+  bool m_editor_open{false};
 
   size_t selected_scene_index{0};
   std::string selected_actor;

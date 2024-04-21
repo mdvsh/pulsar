@@ -87,10 +87,18 @@ ExitStatus App::Application::run() {
   io.FontDefault = io.Fonts->AddFontFromFileTTF(font_path.c_str(), font_size);
   DPIHandler::set_global_font_scaling(&io);
 
+  ImGui::StyleColorsDark();
+  ImGuiStyle& style = ImGui::GetStyle();
+  if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+    style.WindowRounding = 0.0f;
+    style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+  }
   // Setup Platform/Renderer backends
   ImGui_ImplSDL2_InitForSDLRenderer(m_window->get_native_window(),
                                     m_window->get_native_renderer());
   ImGui_ImplSDLRenderer2_Init(m_window->get_native_renderer());
+
+  Engine::getInstance().initialize();
 
   m_running = true;
   while (m_running) {
@@ -120,8 +128,8 @@ ExitStatus App::Application::run() {
     }
 
     ImGui::Render();
-    SDL_SetRenderDrawColor(m_window->get_native_renderer(), 100, 100, 100, 255);
-    SDL_RenderClear(m_window->get_native_renderer());
+    // SDL_SetRenderDrawColor(m_window->get_native_renderer(), 100, 100, 100, 255);
+//    SDL_RenderClear(m_window->get_native_renderer());
     ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
     SDL_RenderPresent(m_window->get_native_renderer());
   }

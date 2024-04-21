@@ -90,8 +90,13 @@ class Renderer {
     }
     font_cache.clear();
 
-    SDL_DestroyRenderer(sdl_renderer);
-    SDL_DestroyWindow(game_window);
+    // SDL_DestroyRenderer(sdl_renderer);
+    // SDL_DestroyWindow(game_window);
+  }
+
+  void reset() {
+    img_render_requests.clear();
+    text_render_requests.clear();
   }
 
   [[nodiscard]] float get_zoom_factor() const { return ZOOM_FACTOR; }

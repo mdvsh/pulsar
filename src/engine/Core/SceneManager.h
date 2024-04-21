@@ -65,7 +65,7 @@ class SceneManager {
   void CreatePhysWorld();
   void StepPhysWorld() const;
 
-  // Renderer *renderer = nullptr;
+  void reset();
 
   void initialize(const rapidjson::Document& game_config);
 

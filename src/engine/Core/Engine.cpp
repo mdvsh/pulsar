@@ -34,18 +34,18 @@ void Engine::initialize() {
 // }
 
 void Engine::stop_game() {
-  initialize();
   set_engine_off();
 }
 
 void Engine::run_game() {
-  initialize();
-  if (not engine_running) {
-    engine_running = true;
-  }
-
   Renderer& renderer = Renderer::getInstance();
   SceneManager& scene_manager = SceneManager::getInstance();
+
+  if (not engine_running) {
+    engine_running = true;
+   SDL_ShowWindow(renderer.get_game_window());
+   SDL_RaiseWindow(renderer.get_game_window());
+  }
 
   while (engine_running) {
     SDL_Event input_event{};
@@ -58,6 +58,7 @@ void Engine::run_game() {
         InputManager::ProcessEvent(input_event);
       }
     }
+    SDL_SetRenderDrawColor(renderer.get_sdl_renderer(), 0, 0, 0, 255);
     SDL_RenderClear(renderer.get_sdl_renderer());
 
     scene_manager.update_scene_actors();
@@ -95,4 +96,20 @@ void Engine::on_game_window_event(const SDL_WindowEvent& event) {
       // Do nothing otherwise
       return;
   }
+}
+
+void Engine::reset() {
+  SceneManager::getInstance().reset();
+  engine_running = false;
+  is_game_over = false;
+  is_game_won = false;
+  scene_change_queue = std::queue<std::string>();
+
+  const std::string game_config_path =
+      (App::Resources::game_path() / "game.config").generic_string();
+  rapidjson::Document game_config;
+  EngineUtils::ReadJsonFile(game_config_path, game_config);
+
+  SceneManager& scene_manager = SceneManager::getInstance();
+  scene_manager.initialize(game_config);
 }

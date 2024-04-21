@@ -56,6 +56,6 @@ set(BOX2D_BUILD_UNIT_TESTS OFF CACHE BOOL  "Build the Box2D unit tests" FORCE)
 set(BOX2D_BUILD_TESTBED OFF CACHE BOOL  "Build the Box2D testbed" FORCE)
 set(BOX2D_BUILD_DOCS OFF CACHE BOOL  "Build the Box2D documentation" FORCE)
 set(BOX2D_USER_SETTINGS OFF CACHE BOOL  "Override Box2D settings with b2UserSettings.h" FORCE)
-# Populate
 
+# Populate
 FetchContent_MakeAvailable(doctest fmt imgui SDL2 spdlog box2d)
