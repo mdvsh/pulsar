@@ -17,6 +17,8 @@ namespace App {
 
 class UI {
  public:
+  UI();
+
   void renderUI();
   void drawAssetsPane();
   void drawCompPropsPane();

@@ -5,18 +5,18 @@
 #ifndef PULSAR_SRC_ENGINE_CORE_RESOURCEMANAGER_H_
 #define PULSAR_SRC_ENGINE_CORE_RESOURCEMANAGER_H_
 
+#include <atomic>
 #include <filesystem>
+#include <iostream>
 #include <memory>
 #include <string>
 #include <thread>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-#include <iostream>
-#include <atomic>
+#include <yyjson.h>
 
 #include "Core/Resources.hpp"
-
 
 namespace App {
 
@@ -25,6 +25,7 @@ class ResourceManager {
   struct SceneData {
     std::string name;
     std::string path;
+    std::vector<std::string> actors;
   };
 
   struct MediaData {
@@ -58,67 +59,34 @@ class ResourceManager {
     return m_media[name];
   }
 
+  void wb_edited_file(const std::string& file_path, const std::string& content);
+  [[nodiscard]] std::string r_editor_file(const std::string& file_path);
+
+  void evict_from_resources_cache(const std::string& file_path);
+  void read_scene(const std::string& name, const std::string& path);
+  void update_scene_data(yyjson_doc *doc, std::shared_ptr<SceneData> scene);
+
  private:
   std::unordered_map<std::string, std::shared_ptr<SceneData>> m_scenes;
   std::unordered_map<std::string, std::shared_ptr<MediaData>> m_media;
+  std::unordered_map<std::string,
+                     std::pair<std::string, std::filesystem::file_time_type>> editor_file_cache;
   std::vector<std::string> m_scene_names;
   std::vector<std::string> m_media_names;
 
   std::thread observer_thread;
   std::atomic<bool> halt_observer{false};
+  std::mutex cache_mutex;
 
   const std::filesystem::path resources_path = Resources::game_path();
-  const std::unordered_set<std::string> supported_extensions = {".png", ".jpg", ".jpeg",
-                                                   ".bmp", ".wav", ".mp3"};
+  const std::unordered_set<std::string> supported_extensions = {
+      ".png", ".jpg", ".jpeg", ".bmp", ".wav", ".mp3"};
 
-  ResourceManager() {
-    scan_for_changes();
-    observer_thread = std::thread(&ResourceManager::observeResources, this);
-  }
+  ResourceManager();
+  ~ResourceManager();
+  void observeResources();
+  void scan_for_changes();
 
-  ~ResourceManager() {
-    halt_observer = true;
-    if (observer_thread.joinable()) {
-      observer_thread.join();
-    }
-  }
-
-  void observeResources() {
-    while (not halt_observer) {
-      std::this_thread::sleep_for(std::chrono::seconds(3));
-      scan_for_changes();
-    }
-  }
-
-  void scan_for_changes() {
-    for (const auto& entry :
-         std::filesystem::directory_iterator(resources_path / "scenes/")) {
-      if (entry.is_regular_file() && entry.path().extension() == ".scene") {
-        std::string sceneName = entry.path().stem().string();
-        if (m_scenes.find(sceneName) == m_scenes.end()) {
-          auto scene = std::make_shared<SceneData>();
-          scene->name = sceneName;
-          scene->path = entry.path().generic_string();
-          m_scenes[sceneName] = scene;
-          m_scene_names.push_back(sceneName);
-        }
-      }
-    }
-
-    for (const auto& entry : std::filesystem::recursive_directory_iterator(resources_path)) {
-      if (entry.is_regular_file() && supported_extensions.find(entry.path().extension()) != supported_extensions.end()) {
-        std::string mediaName = entry.path().stem().string();
-        if (m_media.find(mediaName) == m_media.end()) {
-          auto media = std::make_shared<MediaData>();
-          media->name = mediaName;
-          media->path = entry.path().generic_string();
-          m_media[mediaName] = media;
-          m_media_names.push_back(mediaName);
-        }
-      }
-    }
-
-  }
 };
 
 }  // namespace App

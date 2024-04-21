@@ -78,7 +78,7 @@ find_package(SDL2_mixer REQUIRED)
 
 target_link_libraries(${NAME}
   PRIVATE project_warnings
-  PUBLIC fmt spdlog SDL2::SDL2 imgui Settings box2d
+  PUBLIC fmt spdlog SDL2::SDL2 imgui Settings box2d yyjson
   PUBLIC ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARIES}
   ${LUA_LIBRARIES}
 )

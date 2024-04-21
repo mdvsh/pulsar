@@ -3,9 +3,9 @@
 //
 
 #include "UI.h"
-#include "Core/SceneManager.h"
 #include "Core/Engine.h"
 #include "Core/ResourceManager.h"
+#include "Core/SceneManager.h"
 
 namespace App {
 void UI::renderUI() {
@@ -54,6 +54,7 @@ void UI::drawToolbar() {
   for (const std::string& scene : scenes) {
     if (ImGui::Selectable(scene.c_str(), scene == selected_scene)) {
       selected_scene = scene;
+      setEditorText();
     }
   }
   ImGui::End();
@@ -85,22 +86,21 @@ void UI::drawToolbar() {
 }
 
 void UI::drawEditorPane() {
-  // ImGui::Begin("Editor");
   dockspace_id = ImGui::GetID("EditorDockspace");
   ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f),
                    ImGuiDockNodeFlags_PassthruCentralNode);
 
   ImGui::Begin("Hierarchy");
-  const std::vector<std::string> scenes = ResourceManager::getInstance().getScenes();
+  const std::vector<std::string> scenes =
+      ResourceManager::getInstance().getScenes();
   for (const std::string& scene : scenes) {
     if (ImGui::TreeNode(scene.c_str())) {
-      for (const auto& actor :
-           SceneManager::getInstance().copy_of_scene_actors) {
-        if (ImGui::Selectable(actor->name.c_str(),
-                              selected_actor == actor->name)) {
-          selected_actor = actor->name;
+      const auto scene_data = ResourceManager::getInstance().getScene(scene);
+      for (const auto& actor : scene_data->actors) {
+        if (ImGui::Selectable(actor.c_str(),
+                              selected_actor == actor)) {
+          selected_actor = actor;
           selected_scene = scene;
-          setEditorText();
         }
       }
       ImGui::TreePop();
@@ -111,7 +111,8 @@ void UI::drawEditorPane() {
 
 void UI::drawAssetsPane() {
   ImGui::Begin("Assets");
-  std::vector<std::string> asset_names = ResourceManager::getInstance().getMedia();
+  std::vector<std::string> asset_names =
+      ResourceManager::getInstance().getMedia();
 
   static int selected_asset = -1;
   ImGui::BeginChild("AssetThumbnails", ImVec2(200, 0), true);
@@ -283,7 +284,7 @@ void UI::drawNewCompPane() {
 }
 
 void UI::drawPlaybackControls() {
-    ImGui::Begin("Playback Controls");
+  ImGui::Begin("Playback Controls");
 
   if (ImGui::Button("Play")) {
     Engine::getInstance().run_game();
@@ -303,28 +304,31 @@ void UI::drawPlaybackControls() {
 }
 
 void UI::setEditorText() {
-  editor_file_path = ResourceManager::getInstance().getScene(selected_scene)->path;
-  std::ifstream file(editor_file_path);
-  if (file.good()) {
-    std::string str((std::istreambuf_iterator<char>(file)),
-                    std::istreambuf_iterator<char>());
-    editor.SetText(str);
-  }
+  editor_file_path =
+      ResourceManager::getInstance().getScene(selected_scene)->path;
+  const std::string contents = ResourceManager::getInstance().r_editor_file(editor_file_path);
+  editor.SetText(contents);
   m_editor_open = true;
+}
+
+UI::UI() {
+  editor.SetLanguageDefinition(TextEditor::LanguageDefinition::Lua());
+  editor.SetPalette(TextEditor::GetDarkPalette());
 }
 
 void UI::drawCompEditor() {
   if (m_editor_open) {
     auto cpos = editor.GetCursorPosition();
     ImGui::Begin(
-        "Component Editor", nullptr,
+        "Modify", nullptr,
         ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
     ImGui::SetWindowSize(ImVec2(800, 600), ImGuiCond_FirstUseEver);
     if (ImGui::BeginMenuBar()) {
       if (ImGui::BeginMenu("File")) {
         if (ImGui::MenuItem("Save")) {
-          auto textToSave = editor.GetText();
-          /// save text.... (resourcemanager writeback)
+          const std::string textToSave = editor.GetText();
+          ResourceManager::getInstance().wb_edited_file(editor_file_path,
+                                                      textToSave);
         }
         if (ImGui::MenuItem("Quit", "Alt-F4"))
           m_editor_open = false;
@@ -378,11 +382,11 @@ void UI::drawCompEditor() {
       ImGui::EndMenuBar();
     }
 
-    ImGui::Text("%6d/%-6d %6d lines  | %s | %s | %s | %s", cpos.mLine + 1,
-                cpos.mColumn + 1, editor.GetTotalLines(),
-                editor.IsOverwrite() ? "Ovr" : "Ins",
-                editor.CanUndo() ? "*" : " ",
-                editor.GetLanguageDefinition().mName.c_str(), editor_file_path.c_str());
+    ImGui::Text(
+        "%6d/%-6d %6d lines  | %s | %s | %s | %s", cpos.mLine + 1,
+        cpos.mColumn + 1, editor.GetTotalLines(),
+        editor.IsOverwrite() ? "Ovr" : "Ins", editor.CanUndo() ? "*" : " ",
+        editor.GetLanguageDefinition().mName.c_str(), editor_file_path.c_str());
 
     editor.Render("TextEditor");
     ImGui::End();
