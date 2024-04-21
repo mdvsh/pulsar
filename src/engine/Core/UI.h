@@ -11,22 +11,25 @@
 #include <unordered_set>
 #include "Core/Log.hpp"
 #include "Core/Resources.hpp"
-#include "Core/Editor.h"
+#include "Core/TextEditor.h"
 
 namespace App {
 
 class UI {
  public:
   void renderUI();
-  void drawEditorPane();
   void drawAssetsPane();
   void drawCompPropsPane();
   void drawNewCompPane();
   void drawToolbar();
   void drawCenterPane();
   void drawPlaybackControls();
+  void drawEditorPane();
 
   void onQuitEvent();
+
+  void setEditorText();
+  void drawCompEditor();
 
  private:
   bool m_show_landing_panel{true};
@@ -41,6 +44,9 @@ class UI {
   std::vector<std::string> scene_actors;
   std::string resources_path_str = Resources::game_path().generic_string();
   const std::filesystem::path resources_path = Resources::game_path();
+
+  TextEditor editor;
+  std::string editor_file_path;
 };
 
 }  // namespace App

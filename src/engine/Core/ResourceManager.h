@@ -50,13 +50,13 @@ class ResourceManager {
     return m_media_names;
   }
 
-  // [[nodiscard]] std::shared_ptr<SceneData> getScene(const std::string& name) {
-  //   return m_scenes[name];
-  // }
+  [[nodiscard]] std::shared_ptr<SceneData> getScene(const std::string& name) {
+    return m_scenes[name];
+  }
 
-  // [[nodiscard]] std::shared_ptr<MediaData> getMedia(const std::string& name) {
-  //   return m_media[name];
-  // }
+  [[nodiscard]] std::shared_ptr<MediaData> getMedia(const std::string& name) {
+    return m_media[name];
+  }
 
  private:
   std::unordered_map<std::string, std::shared_ptr<SceneData>> m_scenes;

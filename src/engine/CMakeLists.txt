@@ -43,6 +43,8 @@ add_library(${NAME} STATIC
         Core/Event.h
         Core/ResourceManager.cpp
         Core/ResourceManager.h
+        Core/TextEditor.cpp
+        Core/TextEditor.h
         # Core/Editor.cpp
         # Core/Editor.h
 )
