@@ -122,44 +122,45 @@ $(function() {
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keyword">const</span> std::filesystem::path COMPONENTS_DIR = Resources::game_path() / <span class="stringliteral">&quot;component_types&quot;</span>;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="keywordtype">void</span> initialize();</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="keywordtype">void</span> initialize_state();</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="keywordtype">void</span> initialize_component_registry();</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="keywordtype">void</span> initialize_functions();</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="keywordtype">void</span> establish_inheritance(<span class="keyword">const</span> luabridge::LuaRef&amp; child_table,</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                             <span class="keyword">const</span> luabridge::LuaRef&amp; parent_table) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  std::pair&lt;ComponentType, luabridge::LuaRef&gt; create_component(</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;      <span class="keyword">const</span> std::string&amp;,</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      <span class="keyword">const</span> std::string&amp;);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keywordtype">void</span> reg_debug_namespace();</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keywordtype">void</span> reg_application_namespace();</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keywordtype">void</span> reg_audio_manager();</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keywordtype">void</span> reg_camera_manager();</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keywordtype">void</span> reg_renderer();</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keywordtype">void</span> reg_vector2();</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  <span class="keywordtype">void</span> reg_input_manager();</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keywordtype">void</span> reg_scene_manager();</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="keywordtype">void</span> reg_actor_class();</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="keywordtype">void</span> reg_actor_static_namespace();</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keywordtype">void</span> reg_rigidbody_class();</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <span class="keywordtype">void</span> reg_contact_class();</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="keywordtype">void</span> reg_raycaster_class();</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="keywordtype">void</span> reg_eventbus_class();</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="comment">// [[nodiscard]] std::string get_component_path(const std::string</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="comment">// &amp;component_name) const;</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">void</span> Lua_Log(<span class="keyword">const</span> std::string&amp; message);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">void</span> Lua_LogError(<span class="keyword">const</span> std::string&amp; message);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">int</span> Lua_App_GetFrame();</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">void</span> Lua_App_Sleep(<span class="keywordtype">int</span> ms);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">void</span> Lua_App_Quit();</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">void</span> Lua_App_OpenURL(<span class="keyword">const</span> std::string&amp; url);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;};</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="keywordtype">void</span> reset();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="keywordtype">void</span> initialize_state();</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="keywordtype">void</span> initialize_component_registry();</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="keywordtype">void</span> initialize_functions();</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keywordtype">void</span> establish_inheritance(<span class="keyword">const</span> luabridge::LuaRef&amp; child_table,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                             <span class="keyword">const</span> luabridge::LuaRef&amp; parent_table) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  std::pair&lt;ComponentType, luabridge::LuaRef&gt; create_component(</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      <span class="keyword">const</span> std::string&amp;,</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      <span class="keyword">const</span> std::string&amp;);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keywordtype">void</span> reg_debug_namespace();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keywordtype">void</span> reg_application_namespace();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keywordtype">void</span> reg_audio_manager();</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keywordtype">void</span> reg_camera_manager();</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keywordtype">void</span> reg_renderer();</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  <span class="keywordtype">void</span> reg_vector2();</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keywordtype">void</span> reg_input_manager();</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="keywordtype">void</span> reg_scene_manager();</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="keywordtype">void</span> reg_actor_class();</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keywordtype">void</span> reg_actor_static_namespace();</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <span class="keywordtype">void</span> reg_rigidbody_class();</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="keywordtype">void</span> reg_contact_class();</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="keywordtype">void</span> reg_raycaster_class();</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <span class="keywordtype">void</span> reg_eventbus_class();</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="comment">// [[nodiscard]] std::string get_component_path(const std::string</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="comment">// &amp;component_name) const;</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">void</span> Lua_Log(<span class="keyword">const</span> std::string&amp; message);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">void</span> Lua_LogError(<span class="keyword">const</span> std::string&amp; message);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">int</span> Lua_App_GetFrame();</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">void</span> Lua_App_Sleep(<span class="keywordtype">int</span> ms);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">void</span> Lua_App_Quit();</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">void</span> Lua_App_OpenURL(<span class="keyword">const</span> std::string&amp; url);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;};</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}  <span class="comment">// namespace App</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// PULSAR_SRC_ENGINE_CORE_ECS_H_</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}  <span class="comment">// namespace App</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// PULSAR_SRC_ENGINE_CORE_ECS_H_</span></div>
 <div class="ttc" id="aclassActor_html"><div class="ttname"><a href="classActor.html">Actor</a></div><div class="ttdef"><b>Definition:</b> Actor.h:46</div></div>
 <div class="ttc" id="aclassApp_1_1ECS_html"><div class="ttname"><a href="classApp_1_1ECS.html">App::ECS</a></div><div class="ttdef"><b>Definition:</b> ECS.h:25</div></div>
 </div><!-- fragment --></div><!-- contents -->

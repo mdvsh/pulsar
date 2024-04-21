@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['raycaster_56',['Raycaster',['../classRaycaster.html',1,'']]],
-  ['raycastresult_57',['RaycastResult',['../classRaycastResult.html',1,'']]],
-  ['renderer_58',['Renderer',['../classRenderer.html',1,'']]],
-  ['resources_59',['Resources',['../classApp_1_1Resources.html',1,'App']]],
-  ['rigidbody_60',['Rigidbody',['../classRigidbody.html',1,'']]]
+  ['raycaster_60',['Raycaster',['../classRaycaster.html',1,'']]],
+  ['raycastresult_61',['RaycastResult',['../classRaycastResult.html',1,'']]],
+  ['renderer_62',['Renderer',['../classRenderer.html',1,'']]],
+  ['resourcemanager_63',['ResourceManager',['../classApp_1_1ResourceManager.html',1,'App']]],
+  ['resources_64',['Resources',['../classApp_1_1Resources.html',1,'App']]],
+  ['rigidbody_65',['Rigidbody',['../classRigidbody.html',1,'']]]
 ];
