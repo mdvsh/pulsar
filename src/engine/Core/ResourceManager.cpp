@@ -16,7 +16,7 @@ ResourceManager::ResourceManager() {
 
 void ResourceManager::observeResources() {
   while (not halt_observer) {
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(2));
     scan_for_changes();
   }
 }
@@ -40,7 +40,7 @@ void ResourceManager::evict_from_resources_cache(const std::string& file_path) {
 void ResourceManager::read_scene(const std::string& name,
                                  const std::string& path) {
   std::ifstream file(path);
-  if (file.good()) {
+  if (file.is_open()) {
     std::stringstream buffer;
     buffer << file.rdbuf();
     std::string content = buffer.str();
@@ -92,30 +92,84 @@ void ResourceManager::scan_for_changes() {
     if (entry.is_regular_file() && entry.path().extension() == ".scene") {
       std::string sceneName = entry.path().stem().string();
       read_scene(sceneName, entry.path().generic_string());
-      // if (m_scenes.find(sceneName) == m_scenes.end()) {
-      //   auto scene = std::make_shared<SceneData>();
-      //   scene->name = sceneName;
-      //   scene->path = entry.path().generic_string();
-      //   m_scenes[sceneName] = scene;
-      //   m_scene_names.push_back(sceneName);
-      // }
     }
   }
 
   for (const auto& entry :
        std::filesystem::recursive_directory_iterator(resources_path)) {
-    if (entry.is_regular_file() &&
-        supported_extensions.find(entry.path().extension()) !=
-            supported_extensions.end()) {
-      std::string mediaName = entry.path().stem().string();
-      if (m_media.find(mediaName) == m_media.end()) {
-        auto media = std::make_shared<MediaData>();
-        media->name = mediaName;
-        media->path = entry.path().generic_string();
-        m_media[mediaName] = media;
-        m_media_names.push_back(mediaName);
+        const auto entry_ext = entry.path().extension();
+    if (entry.is_regular_file()) {
+      if (supported_extensions.find(entry_ext) != supported_extensions.end()) {
+        std::string mediaName = entry.path().stem().string();
+        if (m_media.find(mediaName) == m_media.end()) {
+          auto media = std::make_shared<MediaData>();
+          media->name = mediaName;
+          media->path = entry.path().generic_string();
+          m_media[mediaName] = media;
+          m_media_names.push_back(mediaName);
+        }
+        continue;
       }
+
+      if (entry_ext == ".lua") {
+        std::string componentName = entry.path().stem().string();
+        if (m_components.find(componentName) == m_components.end()) {
+          auto component = std::make_shared<TemplateData>();
+          component->name = componentName;
+          component->path = entry.path().generic_string();
+          m_components[componentName] = component;
+          m_component_names.push_back(componentName);
+          std::cout << "Component lua: " << componentName << std::endl;
+        } else {
+          std::cout << "cache hit: " << componentName << "\n";
+        }
+        continue;
+      }
+
+      if (entry_ext == ".template") {
+        std::string actorTemplateName = entry.path().stem().string();
+        if (m_actor_templates.find(actorTemplateName) == m_actor_templates.end()) {
+          auto actorTemplate = std::make_shared<ActorTemplateData>();
+          actorTemplate->name = actorTemplateName;
+          actorTemplate->path = entry.path().generic_string();
+          m_actor_templates[actorTemplateName] = actorTemplate;
+          m_actor_templates_names.push_back(actorTemplateName);
+          std::cout << "Actor Template: " << actorTemplateName << std::endl;
+          std::ifstream file(entry.path());
+          if (file.is_open()) {
+            std::stringstream buffer;
+            buffer << file.rdbuf();
+            std::string content = buffer.str();
+            file.close();
+
+            yyjson_doc* doc = yyjson_read(content.c_str(), content.length(), 0);
+            if (doc) {
+              yyjson_val* components_val = yyjson_obj_get(doc->root, "components");
+              size_t idx, max;
+              if (components_val && yyjson_is_ctn(components_val)) {
+                yyjson_val* key, *val;
+                yyjson_obj_foreach(components_val, idx, max, key, val) {
+                  if (yyjson_is_obj(val)) {
+                    yyjson_val* name_val = yyjson_obj_get(val, "type");
+                    if (name_val && yyjson_is_str(name_val)) {
+                      std::string component_name = yyjson_get_str(name_val);
+                      std::cout << "Component: " << component_name << std::endl;
+                      actorTemplate->components.push_back(component_name);
+                      // fill in other component data (abstrat TODO later)
+                    }
+                  }
+                }
+              }
+            }
+            yyjson_doc_free(doc);
+          }
+        } else {
+          std::cout << "cache hit: " << actorTemplateName << "\n";
+        }
+      }
+
     }
+
   }
 }
 

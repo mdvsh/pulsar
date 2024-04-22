@@ -54,6 +54,7 @@ void UI::drawToolbar() {
   for (const std::string& scene : scenes) {
     if (ImGui::Selectable(scene.c_str(), scene == selected_scene)) {
       selected_scene = scene;
+      editor_file_path = ResourceManager::getInstance().getScene(scene)->path;
       setEditorText();
     }
   }
@@ -82,6 +83,62 @@ void UI::drawToolbar() {
   }
   if (m_show_demo_panel) {
     ImGui::ShowDemoWindow(&m_show_demo_panel);
+  }
+}
+
+void UI::drawSceneEditorPane() {
+  ImGui::Separator();
+  static bool addActorFromTemplateModal = false;
+  static int selectedTemplate = -1;
+  static char an[64] = "";
+  static char an2[64] = "";
+  static std::vector<std::string> act =
+      ResourceManager::getInstance().getActorTemplates();
+
+  if (ImGui::Button("Add Actor from Template")) {
+    addActorFromTemplateModal = true;
+    selectedTemplate = -1;
+    memset(an, 0,
+           sizeof(an));
+    ImGui::OpenPopup("Add Actor from Template");
+  }
+  if (addActorFromTemplateModal) {
+    if (ImGui::BeginPopupModal("Add Actor from Template", nullptr,
+                               ImGuiWindowFlags_AlwaysAutoResize)) {
+      ImGui::ListBox(
+          "Templates", &selectedTemplate,
+          [](void* data, int idx, const char** out_text) {
+            auto* templates = (std::vector<std::string>*)data;
+            *out_text = (*templates)[idx].c_str();
+            strcpy(an2, *out_text);
+            return true;
+          },
+          (void*)&act, act.size(), 4);
+
+      ImGui::InputText("Component Name", an,
+                       sizeof(an));
+      // buggy lol (keep here for dmeo)
+      if (ImGui::Button("Create") && selectedTemplate >= 0) {
+        std::string sourcePath = resources_path_str + "/component_types/" +
+                                 act[selectedTemplate] + ".lua";
+        std::string destPath = resources_path_str + "/component_types/" +
+                               std::string(an) +
+                               ".lua";
+        std::filesystem::copy_file(
+            sourcePath, destPath,
+            std::filesystem::copy_options::overwrite_existing);
+        addActorFromTemplateModal = false;
+        editor_file_path = destPath;
+        setEditorText();
+        ImGui::CloseCurrentPopup();
+      }
+      ImGui::SameLine();
+      if (ImGui::Button("Cancel")) {
+        addActorFromTemplateModal = false;
+        ImGui::CloseCurrentPopup();
+      }
+      ImGui::EndPopup();
+    }
   }
 }
 
@@ -193,8 +250,12 @@ void UI::drawCompPropsPane() {
                   ImGui::ColorEdit3("Color", (float*)&color, misc_flags);
                 }
               }
+              editor_file_path = resources_path_str + "/component_types/" +
+                                 component.first + ".lua";
+              setEditorText();
             }
             drawNewCompPane();
+            drawSceneEditorPane();
           }
         }
       }
@@ -207,28 +268,37 @@ void UI::drawNewCompPane() {
   ImGui::Separator();
   static bool addComponentModal = false;
   static char newComponentName[64] = "";
+
   if (ImGui::Button("Add Component")) {
     addComponentModal = true;
     memset(newComponentName, 0, sizeof(newComponentName));
   }
+
   if (addComponentModal) {
     ImGui::OpenPopup("Add Component");
     if (ImGui::BeginPopupModal("Add Component", &addComponentModal,
                                ImGuiWindowFlags_AlwaysAutoResize)) {
       ImGui::InputText("Component Name", newComponentName,
                        sizeof(newComponentName));
+
       if (ImGui::Button("Create")) {
         std::string componentPath = resources_path_str + "/component_types/" +
                                     std::string(newComponentName) + ".lua";
         std::ofstream file(componentPath);
         file << "-- New component" << std::endl;
         file.close();
+
+        editor_file_path = componentPath;
+        setEditorText();
+
         addComponentModal = false;
       }
+
       ImGui::SameLine();
       if (ImGui::Button("Cancel")) {
         addComponentModal = false;
       }
+
       ImGui::EndPopup();
     }
   }
@@ -236,7 +306,8 @@ void UI::drawNewCompPane() {
   static bool addComponentFromTemplateModal = false;
   static int selectedTemplate = -1;
   static char newComponentNameFromTemplate[64] = "";
-  static std::vector<std::string> componentTemplates;
+  static char newComponentNameFromTemplateError[64] = "";
+  static std::vector<std::string> componentTemplates = ResourceManager::getInstance().getComponentTemplates();
 
   if (ImGui::Button("Add Component from Template")) {
     addComponentFromTemplateModal = true;
@@ -253,7 +324,7 @@ void UI::drawNewCompPane() {
           [](void* data, int idx, const char** out_text) {
             auto* templates = (std::vector<std::string>*)data;
             *out_text = (*templates)[idx].c_str();
-            strcpy(newComponentNameFromTemplate, *out_text);
+            strcpy(newComponentNameFromTemplateError, *out_text);
             return true;
           },
           (void*)&componentTemplates, componentTemplates.size(), 4);
@@ -271,6 +342,8 @@ void UI::drawNewCompPane() {
             sourcePath, destPath,
             std::filesystem::copy_options::overwrite_existing);
         addComponentFromTemplateModal = false;
+        editor_file_path = destPath;
+        setEditorText();
         ImGui::CloseCurrentPopup();
       }
       ImGui::SameLine();
@@ -304,8 +377,6 @@ void UI::drawPlaybackControls() {
 }
 
 void UI::setEditorText() {
-  editor_file_path =
-      ResourceManager::getInstance().getScene(selected_scene)->path;
   const std::string contents = ResourceManager::getInstance().r_editor_file(editor_file_path);
   editor.SetText(contents);
   m_editor_open = true;

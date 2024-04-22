@@ -41,7 +41,6 @@ class Application {
   void draw_editor_windows();
   void draw_playback_controls();
   static std::vector<std::string> get_proj_scene_files();
-  static std::vector<std::string> LoadComponentTemplates();
 
   void set_UI(std::unique_ptr<UI> ui) {
     m_ui = std::move(ui);

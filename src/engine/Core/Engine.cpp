@@ -42,9 +42,10 @@ void Engine::run_game() {
   SceneManager& scene_manager = SceneManager::getInstance();
 
   if (not engine_running) {
-    engine_running = true;
+   engine_running = true;
    SDL_ShowWindow(renderer.get_game_window());
    SDL_RaiseWindow(renderer.get_game_window());
+  //  initialize();
   }
 
   while (engine_running) {

@@ -34,6 +34,17 @@ class ResourceManager {
     // later, thumbnail, type, etc.
   };
 
+  struct ActorTemplateData {
+    std::string name;
+    std::string path;
+    std::vector<std::string> components;
+  };
+  
+  struct TemplateData {
+    std::string name;
+    std::string path;
+  };
+
   static ResourceManager& getInstance() {
     static ResourceManager instance;
     return instance;
@@ -59,6 +70,14 @@ class ResourceManager {
     return m_media[name];
   }
 
+  [[nodiscard]] std::vector<std::string> getComponentTemplates() const {
+    return m_component_names;
+  }
+
+  [[nodiscard]] std::vector<std::string> getActorTemplates() const {
+    return m_actor_templates_names;
+  }
+
   void wb_edited_file(const std::string& file_path, const std::string& content);
   [[nodiscard]] std::string r_editor_file(const std::string& file_path);
 
@@ -71,8 +90,12 @@ class ResourceManager {
   std::unordered_map<std::string, std::shared_ptr<MediaData>> m_media;
   std::unordered_map<std::string,
                      std::pair<std::string, std::filesystem::file_time_type>> editor_file_cache;
+  std::unordered_map<std::string, std::shared_ptr<TemplateData>> m_components;
+  std::unordered_map<std::string, std::shared_ptr<ActorTemplateData>> m_actor_templates;
   std::vector<std::string> m_scene_names;
   std::vector<std::string> m_media_names;
+  std::vector<std::string> m_component_names;
+  std::vector<std::string> m_actor_templates_names;
 
   std::thread observer_thread;
   std::atomic<bool> halt_observer{false};

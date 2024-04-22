@@ -24,6 +24,7 @@ class UI {
   void drawCompPropsPane();
   void drawNewCompPane();
   void drawToolbar();
+  void drawSceneEditorPane();
   void drawCenterPane();
   void drawPlaybackControls();
   void drawEditorPane();
